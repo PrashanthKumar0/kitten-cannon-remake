@@ -8,8 +8,8 @@ let canvas, ctx;
 
 function main() {
     canvas = $("cnvs");
-    canvas.width=innerWidth;
-    canvas.height=innerHeight;
+    canvas.width=640;
+    canvas.height=480;
     ctx = canvas.getContext("2d");
 }
 
