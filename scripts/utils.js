@@ -1,3 +1,3 @@
-export function $(element){
+export function $(element) {
     return document.getElementById(element);
 }
