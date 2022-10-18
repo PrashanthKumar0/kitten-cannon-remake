@@ -1,4 +1,7 @@
-export default class Sprite {
+import "../Shapes/Rectangle.js";
+import { Frame } from "./Frame.js";
+
+export default class SpriteSheet {
     constructor(sprite_url, image_extension = '.png') {
         // ! PUBLIC
 
@@ -40,4 +43,12 @@ export default class Sprite {
         return this;
     }
 
+    getFrame(frame_name){
+        let frame=this.__json.frames[frame_name];
+        if(!frame){
+            throw Error(" frame name "+frame_name+" not found in "+this.sprite_url);
+        }
+        return new Frame(frame,this.__image);
+    }
+    
 }
