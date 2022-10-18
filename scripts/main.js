@@ -27,7 +27,7 @@ window.onload = main;
 let sprite;
 async function preload() {
     console.log("start loading");
-    sprite = await new Sprite("../assets/sprite_sheet/kitty_cannon_dat").load();
+    sprite = await new Sprite("assets/sprite_sheet/kitty_cannon_dat").load();
     console.log(sprite.name + " loaded...");
 }
 
