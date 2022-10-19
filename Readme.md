@@ -10,3 +10,4 @@ TODO : (Lots of things actually).
 - [ ] Refactor code. (follow any code style)
 - [ ] Proper type checking. (with instanceof ?
 - [ ] Doc comments
+- [ ] Stagger frame in sprite Animator . (manage sprite fps dynamically)
