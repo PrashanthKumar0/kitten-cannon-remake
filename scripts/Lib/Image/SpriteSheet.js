@@ -1,5 +1,5 @@
 import "../Shapes/Rectangle.js";
-import { Frame } from "./Frame.js";
+import  Frame  from "./Frame.js";
 
 export default class SpriteSheet {
     constructor(sprite_url, image_extension = '.png') {
@@ -51,4 +51,9 @@ export default class SpriteSheet {
         return new Frame(frame,this.__image);
     }
     
+    getAnimationFrames(animation_name){
+        let anim_data=null;
+        if(!(anim_data=this.__json.animations[animation_name])) throw Error(" Invalid animation Name " + animation_name);
+        return anim_data;
+    }
 }

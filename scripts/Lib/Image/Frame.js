@@ -1,6 +1,6 @@
 import { toRadians } from "../Math/functions.js";
 
-export class Frame {
+export default class Frame {
     constructor(data, image) {
         if ((typeof data) != (typeof {})) throw " given data isn't valid ";
         if (!(image instanceof Image)) throw " given image isn't valid ";
@@ -18,12 +18,17 @@ export class Frame {
     }
 
     // TODO : Refactor  DRY 
-    draw(canvas2D_context, destination_x, destination_y, destination_width, destination_height) {
+    draw(canvas2D_context, destination_x=0, destination_y=0, destination_width=undefined, destination_height=undefined) {
         let source_x = this.__data.frame.x;
         let source_y = this.__data.frame.y;
         let source_w = this.__data.rotated ? this.__data.frame.h : this.__data.frame.w;
         let source_h = this.__data.rotated ? this.__data.frame.w : this.__data.frame.h;
         
+        if(!(destination_height && destination_width)){
+            destination_height=source_h;
+            destination_width=source_w;
+        } 
+
         if (this.__data.rotated) {
 
             let dw = this.__data.rotated ? destination_height : destination_width;

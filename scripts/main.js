@@ -1,8 +1,11 @@
-import { Vector2D } from "./Lib/Math/Vector2D.js";
+// import { Vector2D } from "./Lib/Math/Vector2D.js";
 import Sprite from "./Lib/Image/SpriteSheet.js";
 import { $ } from "./utils.js";
+import SpriteAnimator from "./Lib/Image/SpriteAnimator.js";
+import { toRadians } from "./Lib/Math/functions.js";
 
-
+//  production 
+// console.log=()=>{};
 
 
 
@@ -31,35 +34,75 @@ async function preload() {
     console.log(sprite.name + " loaded...");
 }
 
-let baloon_frame;    
-function temp(){
-    // baloon_frame = sprite.getFrame('kitty_hq/3.png'); // instance of Sprite
+let venus_animation, spikes_animation;
+let barrel_anim;
+let grass_sprite, cannon_base;
+
+function temp() {
+    grass_sprite = sprite.getFrame("grass/1.png");
+    cannon_base = sprite.getFrame("cannon_base/cannon_base.png");
+
+    venus_animation = new SpriteAnimator("venus", sprite);
+    spikes_animation = new SpriteAnimator("spikes", sprite);
+    barrel_anim = new SpriteAnimator("barrel_shoot", sprite);
+
+    venus_animation.onComplete = function () {
+        console.log("completed venus animation");
+        venus_animation.reset();
+    }
+    barrel_anim.onComplete = function () {
+        console.log("completed spikes animation");
+        barrel_anim.reset();
+    }
+
 }
 
-let i=1;
+function animate(obj_animation, x = 0, y = 0) {
+    let animation_frame = obj_animation.getCurrentFrame();
+
+    let w = animation_frame.getWidth();
+    let h = animation_frame.getHeight();
+    animation_frame.draw(ctx, x, y, w, h);
+    ctx.strokeRect(x, y, w, h);
+
+    obj_animation.proceed();
+}
+
+let barrel_ang=toRadians(-60);
+
 function gameLoop() {
-    i%=28;
-    if(i==0) i=1;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    baloon_frame = sprite.getFrame('venus/'+i+'.png'); // instance of Sprite
-    console.log("gameLoop()...");
-    let x=100;
-    let y=100;
-    // let ar=baloon_frame.getWidth()/baloon_frame.getHeight();
-    // let w=61;
-    // let h=(1/ar)*61;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    let w=baloon_frame.getWidth();
-    let h=baloon_frame.getHeight();
-    baloon_frame.draw(ctx, x, y, w, h);
-    ctx.strokeStyle="green";
-    ctx.strokeRect(x,y,w,h);
+
+    if(barrel_ang < toRadians(-10)) {
+        barrel_ang+=0.01;
+    }
+
+    let grass_h = grass_sprite.getHeight();
+
+    let cannon_base_w = cannon_base.getWidth();
+    let cannon_base_h = cannon_base.getHeight();
+
+    let y_bottom = canvas.height - grass_h;
+
+    grass_sprite.draw(ctx, 0, canvas.height - grass_h + 1);
+    animate(venus_animation, 520 ,y_bottom - 20);
+    animate(spikes_animation, 260, y_bottom + 40);
+
     
-    // baloon_frame.piviotX=w/2;
-    // baloon_frame.piviotY=h/2;
-    // baloon_frame.rotation+=0.1;
-    i++;
-    setTimeout(gameLoop,50);
+    ctx.save();
+    {
+        let x=100;
+        let y=canvas.height - cannon_base_h + 10;
+        let bh=barrel_anim.getCurrentFrame().getHeight();
+        ctx.translate(x, y + bh/2);
+        ctx.rotate(barrel_ang);
+        // ctx.fillRect(0, 0, 10, 10);
+        animate(barrel_anim, 0,-bh/2);
+    } ctx.restore();
+   
+    cannon_base.draw(ctx, 0, canvas.height - cannon_base_h - 10);
 
+    setTimeout(gameLoop, 60);
     // requestAnimationFrame(gameLoop);
 }
