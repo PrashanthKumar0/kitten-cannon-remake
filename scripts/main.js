@@ -30,13 +30,13 @@ window.onload = main;
 
 
 let sprite;
-let grass,tank;
+let grass, tank;
 async function preload() {
     console.log("start loading");
     sprite = await new Sprite("assets/sprite_sheet/kitty_cannon_dat").load();
     console.log(sprite.name + " loaded...");
-    grass=new Grass(ctx,sprite);
-    tank=new Tank(ctx,sprite);
+    grass = new Grass(ctx, sprite);
+    tank = new Tank(ctx, sprite);
 }
 
 // let venus_animation, spikes_animation;
@@ -75,46 +75,40 @@ async function preload() {
 
 // let barrel_ang=toRadians(-60);
 
-let bg=new Image();
-bg.src="ref_images/cannon_0deg.png";
+let bg = new Image();
+bg.src = "ref_images/cannon_60deg.png";
 
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(bg,0,0);
+    // ctx.drawImage(bg, 0, 0);
 
-    // grass.draw();
+    grass.draw();
     tank.draw();
-
     tank.update();
-    // if(barrel_ang < toRadians(-10)) {
-    //     barrel_ang+=0.01;
-    // }
-
-    // let grass_h = grass_sprite.getHeight();
-
-    // let cannon_base_w = cannon_base.getWidth();
-    // let cannon_base_h = cannon_base.getHeight();
-
-    // let y_bottom = canvas.height - grass_h;
 
     // grass_sprite.draw(ctx, 0, canvas.height - grass_h + 1);
     // animate(venus_animation, 520 ,y_bottom - 20);
     // animate(spikes_animation, 260, y_bottom + 40);
 
-    
-    // ctx.save();
-    // {
-    //     let x=100;
-    //     let y=canvas.height - cannon_base_h + 10;
-    //     let bh=barrel_anim.getCurrentFrame().getHeight();
-    //     ctx.translate(x, y + bh/2);
-    //     ctx.rotate(barrel_ang);
-    //     // ctx.fillRect(0, 0, 10, 10);
-    //     animate(barrel_anim, 0,-bh/2);
-    // } ctx.restore();
-   
+
     // cannon_base.draw(ctx, 0, canvas.height - cannon_base_h - 10);
 
-    // setTimeout(gameLoop, 60);
-    // requestAnimationFrame(gameLoop);
+    // setTimeout(gameLoop, 1000 / 60);
+    requestAnimationFrame(gameLoop);
+}
+
+onkeydown = (e) => {
+    console.log(e.key.toLowerCase());
+    switch (e.key.toLowerCase()) {
+        case 'arrowup':
+        case 'w':
+            tank.barrelUp();
+            break;
+
+        case 'arrowdown':
+        case 's':
+            tank.barrelDown();
+            break;
+
+    }
 }
