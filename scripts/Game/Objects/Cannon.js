@@ -2,7 +2,7 @@ import SpriteAnimator from "../../Lib/Image/SpriteAnimator.js";
 import { toRadians, toDegree } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
 
-export default class Tank {
+export default class Cannon {
     constructor(canvas2D_context, sprite_sheet) {
         this.__ctx = canvas2D_context;
         this.__sprite_sheet = sprite_sheet;

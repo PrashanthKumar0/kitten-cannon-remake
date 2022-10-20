@@ -4,7 +4,7 @@ import { $ } from "./utils.js";
 // import SpriteAnimator from "./Lib/Image/SpriteAnimator.js";
 // import { toRadians } from "./Lib/Math/functions.js";
 import Grass from "./Game/Objects/Grass.js";
-import Tank from "./Game/Objects/Tank.js";
+import Cannon from "./Game/Objects/Cannon.js";
 import { KEYS, handleKeyboardCallbacks, registerKeyEventCallback } from "./Game/KeyboardController.js";
 //  production 
 // console.log=()=>{};
@@ -30,23 +30,23 @@ function setup() {
 }
 
 let sprite;
-let grass, tank;
+let grass, cannon;
 async function preload() {
     console.log("start loading");
     sprite = await new Sprite("assets/sprite_sheet/kitty_cannon_dat").load();
     console.log(sprite.name + " loaded...");
     grass = new Grass(ctx, sprite);
-    tank = new Tank(ctx, sprite);
+    cannon = new Cannon(ctx, sprite);
 
 
     KEYS.r="r";
-    registerKeyEventCallback(KEYS.r, () => { tank.resetCannon(); }); // temporarry
+    registerKeyEventCallback(KEYS.r, () => { cannon.resetCannon(); }); // temporarry
     
-    registerKeyEventCallback(KEYS.w, () => { tank.barrelUp(); });
-    registerKeyEventCallback(KEYS.arrowup, () => { tank.barrelUp(); });
-    registerKeyEventCallback(KEYS.s, () => { tank.barrelDown(); });
-    registerKeyEventCallback(KEYS.arrowdown, () => { tank.barrelDown(); });
-    registerKeyEventCallback(KEYS.space, () => { tank.barrelShoot(); });
+    registerKeyEventCallback(KEYS.w, () => { cannon.barrelUp(); });
+    registerKeyEventCallback(KEYS.arrowup, () => { cannon.barrelUp(); });
+    registerKeyEventCallback(KEYS.s, () => { cannon.barrelDown(); });
+    registerKeyEventCallback(KEYS.arrowdown, () => { cannon.barrelDown(); });
+    registerKeyEventCallback(KEYS.space, () => { cannon.barrelShoot(); });
 
 }
 
@@ -59,8 +59,8 @@ function gameLoop() {
     // ctx.drawImage(bg, 0, 0);
 
     grass.draw();
-    tank.draw();
-    tank.update();
+    cannon.draw();
+    cannon.update();
     handleKeyboardCallbacks();
 
     // setTimeout(gameLoop, 1000 / 60);
