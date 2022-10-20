@@ -3,8 +3,8 @@ import Sprite from "./Lib/Image/SpriteSheet.js";
 import { $ } from "./utils.js";
 // import SpriteAnimator from "./Lib/Image/SpriteAnimator.js";
 // import { toRadians } from "./Lib/Math/functions.js";
-import Grass from "./Game/Grass.js";
-import Tank from "./Game/Tank.js";
+import Grass from "./Game/Objects/Grass.js";
+import Tank from "./Game/Objects/Tank.js";
 import { KEYS, handleKeyboardCallbacks, registerKeyEventCallback } from "./Game/KeyboardController.js";
 //  production 
 // console.log=()=>{};
