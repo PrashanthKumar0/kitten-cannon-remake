@@ -41,9 +41,12 @@ async function preload() {
 
     // registerKeyEventCallback(KEYS.space,()=>{}); 
 
+    KEYS.r="r";
+    registerKeyEventCallback(KEYS.r, () => { tank.resetCannon(); }); // temporarry
+    
     registerKeyEventCallback(KEYS.w, () => { tank.barrelUp(); });
     registerKeyEventCallback(KEYS.arrowup, () => { tank.barrelUp(); });
-    registerKeyEventCallback(KEYS.d, () => { tank.barrelDown(); });
+    registerKeyEventCallback(KEYS.s, () => { tank.barrelDown(); });
     registerKeyEventCallback(KEYS.arrowdown, () => { tank.barrelDown(); });
     registerKeyEventCallback(KEYS.space, () => { tank.barrelShoot(); });
 

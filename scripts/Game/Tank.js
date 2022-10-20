@@ -119,7 +119,6 @@ export default class Tank {
     draw() {
         if (this.isShooting) {
             this.draw_barrelShootAnimation();
-
         } else {
             this.draw_barrel();
         }
@@ -222,9 +221,12 @@ export default class Tank {
         this.__animations.barrel_meter.animator.proceed();
         if (this.isShooting) {
             this.__animations.barrel_shoot.animator.proceed();
-        } else {
-            this.update_powerPercentage();
         }
+        this.update_powerPercentage();
+    }
+    resetCannon(){
+        this.isShooting=false;
+        this.__animations.barrel_shoot.animator.reset();
     }
     update_powerPercentage() {
         this.powerPercent += this.powerVelocity;

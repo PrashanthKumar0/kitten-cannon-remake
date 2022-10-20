@@ -7,6 +7,7 @@ export const KEYS={
     "s":"s",
     "space":" ",
 }; 
+// Object.freeze(KEYS);
 export function registerKeyEventCallback(key_name,callback){
     let callback_el=event_callback_map[key_name];
     if(!callback_el){
