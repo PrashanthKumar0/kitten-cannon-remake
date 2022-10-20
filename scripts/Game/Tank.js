@@ -1,5 +1,6 @@
 import SpriteAnimator from "../Lib/Image/SpriteAnimator.js";
 import { toRadians, toDegree } from "../Lib/Math/functions.js";
+import { Vector2D } from "../Lib/Math/Vector2D.js";
 
 export default class Tank {
     constructor(canvas2D_context, sprite_sheet) {
@@ -51,7 +52,7 @@ export default class Tank {
         let y = barrel.y;
         let h = barrel.h;
         let w = barrel.w;
-        meter_animator.onComplete=(function () {
+        meter_animator.onComplete = (function () {
             // this.isShooting = false;
         }.bind(this));
         this.__animations['barrel_shoot'] = {
@@ -127,6 +128,20 @@ export default class Tank {
         this.draw_cannonBase();
         this.draw_cannonDial();
         this.draw_barrelAngleText();
+        // temp
+        let barrel_frame = this.__frames.cannon_barrel;
+        let base_vec = new Vector2D(barrel_frame.x, barrel_frame.y + barrel_frame.h / 2);
+
+        let fireWidth=(barrel_frame.w)*(22/100); // since barrel sprite contains padding for fire.
+
+        this.__ctx.strokeStyle="red";
+        this.__ctx.beginPath();
+        this.__ctx.moveTo(base_vec.x, base_vec.y);
+        base_vec.add(this.getBarrelDirectionVector().scale(barrel_frame.w - fireWidth));
+        this.__ctx.lineTo(base_vec.x, base_vec.y);
+        this.__ctx.closePath();
+        this.__ctx.stroke();
+
     }
     draw_cannonBase() {
         let cannon_base = this.__frames.cannon_base;
@@ -201,13 +216,13 @@ export default class Tank {
     }
 
     barrelUp() {
-        if(this.isShooting) return;
+        if (this.isShooting) return;
         this.barrel_angle -= this.barrel_angle_unit;
         if (this.barrel_angle <= this.barrel_angleMin) this.barrel_angle = this.barrel_angleMin;
     }
-    
+
     barrelDown() {
-        if(this.isShooting) return;
+        if (this.isShooting) return;
         this.barrel_angle += this.barrel_angle_unit;
         if (this.barrel_angle >= this.barrel_angleMax) this.barrel_angle = this.barrel_angleMax;
     }
@@ -216,6 +231,14 @@ export default class Tank {
         this.isShooting = true;
     }
 
+    getBarrelDirectionVector() {
+        return new Vector2D().fromAngle(this.barrel_angle);
+
+    }
+    getBarrelEnd() {
+        throw Error("its stub yet");
+        let cannon_end = this.getBarrelDirectionVector();
+    }
 
     update() {
         this.__animations.barrel_meter.animator.proceed();
@@ -224,8 +247,8 @@ export default class Tank {
         }
         this.update_powerPercentage();
     }
-    resetCannon(){
-        this.isShooting=false;
+    resetCannon() {
+        this.isShooting = false;
         this.__animations.barrel_shoot.animator.reset();
     }
     update_powerPercentage() {
