@@ -5,7 +5,7 @@ import { $ } from "./utils.js";
 // import { toRadians } from "./Lib/Math/functions.js";
 import Grass from "./Game/Grass.js";
 import Tank from "./Game/Tank.js";
-
+import { KEYS, handleKeyboardCallbacks, registerKeyEventCallback } from "./Game/KeyboardController.js";
 //  production 
 // console.log=()=>{};
 
@@ -14,11 +14,7 @@ import Tank from "./Game/Tank.js";
 let canvas, ctx;
 
 async function main() {
-    canvas = $("cnvs");
-    canvas.width = 1040;
-    canvas.height = 640;
-    ctx = canvas.getContext("2d");
-
+    setup();
     await preload();
 
     // temp(); // just to test sprite Class temporrarily.
@@ -27,7 +23,12 @@ async function main() {
 
 window.onload = main;
 
-
+function setup() {
+    canvas = $("cnvs");
+    canvas.width = 1040;
+    canvas.height = 640;
+    ctx = canvas.getContext("2d");
+}
 
 let sprite;
 let grass, tank;
@@ -37,6 +38,15 @@ async function preload() {
     console.log(sprite.name + " loaded...");
     grass = new Grass(ctx, sprite);
     tank = new Tank(ctx, sprite);
+
+    // registerKeyEventCallback(KEYS.space,()=>{}); 
+
+    registerKeyEventCallback(KEYS.w, () => { tank.barrelUp(); });
+    registerKeyEventCallback(KEYS.arrowup, () => { tank.barrelUp(); });
+    registerKeyEventCallback(KEYS.d, () => { tank.barrelDown(); });
+    registerKeyEventCallback(KEYS.arrowdown, () => { tank.barrelDown(); });
+    registerKeyEventCallback(KEYS.space, () => { tank.barrelShoot(); });
+
 }
 
 // let venus_animation, spikes_animation;
@@ -85,7 +95,7 @@ function gameLoop() {
     grass.draw();
     tank.draw();
     tank.update();
-
+    handleKeyboardCallbacks();
     // grass_sprite.draw(ctx, 0, canvas.height - grass_h + 1);
     // animate(venus_animation, 520 ,y_bottom - 20);
     // animate(spikes_animation, 260, y_bottom + 40);
@@ -95,20 +105,4 @@ function gameLoop() {
 
     // setTimeout(gameLoop, 1000 / 60);
     requestAnimationFrame(gameLoop);
-}
-
-onkeydown = (e) => {
-    console.log(e.key.toLowerCase());
-    switch (e.key.toLowerCase()) {
-        case 'arrowup':
-        case 'w':
-            tank.barrelUp();
-            break;
-
-        case 'arrowdown':
-        case 's':
-            tank.barrelDown();
-            break;
-
-    }
 }

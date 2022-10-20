@@ -29,9 +29,9 @@ export default class Tank {
 
     __addMeterAnimator() {
         let meter_animator = new SpriteAnimator('cannon_meter', this.__sprite_sheet);
-        meter_animator.loop=true;
+        meter_animator.loop = true;
         let x = 26;
-        let y = this.__ctx.canvas.height-281;
+        let y = this.__ctx.canvas.height - 281;
         let ar = meter_animator.getCurrentFrame().getAspectRatio();
         let h = 160;
         let w = h * ar;
@@ -158,9 +158,9 @@ export default class Tank {
         let w = this.__animations.barrel_meter.w;
         let h = this.__animations.barrel_meter.h;
         // this.__ctx.strokeRect(x, y, w, h);
-        this.__ctx.imageSmoothingEnabled=false;
-        meter_frame.draw(this.__ctx,x,y,w,h);
-        this.__ctx.imageSmoothingEnabled=true;
+        this.__ctx.imageSmoothingEnabled = false;
+        meter_frame.draw(this.__ctx, x, y, w, h);
+        this.__ctx.imageSmoothingEnabled = true;
     }
 
     barrelUp() {
@@ -172,6 +172,11 @@ export default class Tank {
         this.barrel_angle += this.barrel_angle_unit;
         if (this.barrel_angle >= this.barrel_angleMax) this.barrel_angle = this.barrel_angleMax;
     }
+
+    barrelShoot() {
+
+    }
+
 
     update() {
         this.update_powerPercentage();

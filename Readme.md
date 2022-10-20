@@ -11,3 +11,4 @@ TODO : (Lots of things actually).
 - [ ] Proper type checking. (with instanceof ?
 - [ ] Doc comments
 - [ ] Stagger frame in sprite Animator . (manage sprite fps dynamically)
+- [ ] Maybe add # for private fields in js
