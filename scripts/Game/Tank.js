@@ -52,7 +52,7 @@ export default class Tank {
         let h = barrel.h;
         let w = barrel.w;
         meter_animator.onComplete=(function () {
-            this.isShooting = false;
+            // this.isShooting = false;
         }.bind(this));
         this.__animations['barrel_shoot'] = {
             animator: meter_animator,
@@ -202,11 +202,13 @@ export default class Tank {
     }
 
     barrelUp() {
+        if(this.isShooting) return;
         this.barrel_angle -= this.barrel_angle_unit;
         if (this.barrel_angle <= this.barrel_angleMin) this.barrel_angle = this.barrel_angleMin;
     }
-
+    
     barrelDown() {
+        if(this.isShooting) return;
         this.barrel_angle += this.barrel_angle_unit;
         if (this.barrel_angle >= this.barrel_angleMax) this.barrel_angle = this.barrel_angleMax;
     }
