@@ -5,8 +5,7 @@ export default class Tank {
     constructor(canvas2D_context, sprite_sheet) {
         this.__ctx = canvas2D_context;
         this.__sprite_sheet = sprite_sheet;
-        this.__frames = {
-        };
+        this.__frames = {};
         this.__addCannonBaseFrame();
         this.__addCannonDialFrame();
         this.__addBarrelFrame();
@@ -21,10 +20,11 @@ export default class Tank {
         this.powerPercent = this.minPowerPercent;
         this.powerVelocity = this.powerVelocityScale;
 
-        this.__animations = {
-            // 'barrel_shoot': new SpriteAnimator('barrel_shoot', sprite_sheet),
-        };
+        this.__animations = {};
         this.__addMeterAnimator();
+        this.__addBarrelShootAnimator();
+
+        this.isShooting = false;
     }
 
     __addMeterAnimator() {
@@ -36,6 +36,25 @@ export default class Tank {
         let h = 160;
         let w = h * ar;
         this.__animations['barrel_meter'] = {
+            animator: meter_animator,
+            x: x,
+            y: y,
+            w: w,
+            h: h,
+        }
+    }
+
+    __addBarrelShootAnimator() {
+        let barrel = this.__frames.cannon_barrel;
+        let meter_animator = new SpriteAnimator('barrel_shoot', this.__sprite_sheet);
+        let x = barrel.x;
+        let y = barrel.y;
+        let h = barrel.h;
+        let w = barrel.w;
+        meter_animator.onComplete=(function () {
+            this.isShooting = false;
+        }.bind(this));
+        this.__animations['barrel_shoot'] = {
             animator: meter_animator,
             x: x,
             y: y,
@@ -98,7 +117,12 @@ export default class Tank {
 
 
     draw() {
-        this.draw_barrel();
+        if (this.isShooting) {
+            this.draw_barrelShootAnimation();
+
+        } else {
+            this.draw_barrel();
+        }
         this.draw_powerPercentage();
         this.draw_meter();
         this.draw_cannonBase();
@@ -163,6 +187,20 @@ export default class Tank {
         this.__ctx.imageSmoothingEnabled = true;
     }
 
+    draw_barrelShootAnimation() {
+        let barrel_shoot_frame = this.__animations.barrel_shoot.animator.getCurrentFrame();
+
+        let cannon_barrel = this.__frames.cannon_barrel;
+        this.__ctx.save();
+        this.__ctx.translate(cannon_barrel.x, cannon_barrel.y + cannon_barrel.h / 2);
+        this.__ctx.rotate(this.barrel_angle);
+        this.__ctx.fillRect(0, 0, 10, 10);
+        // this.__ctx.strokeRect(0, -cannon_barrel.h / 2, cannon_barrel.w, cannon_barrel.h)
+        barrel_shoot_frame.draw(this.__ctx, 0, -cannon_barrel.h / 2, cannon_barrel.w, cannon_barrel.h)
+        this.__ctx.restore();
+        // barrel_frame.draw(this.__ctx, 0, 0, 100, 100);
+    }
+
     barrelUp() {
         this.barrel_angle -= this.barrel_angle_unit;
         if (this.barrel_angle <= this.barrel_angleMin) this.barrel_angle = this.barrel_angleMin;
@@ -174,16 +212,17 @@ export default class Tank {
     }
 
     barrelShoot() {
-
+        this.isShooting = true;
     }
 
 
     update() {
-        this.update_powerPercentage();
-        for (let animKey in this.__animations) {
-            this.__animations[animKey].animator.proceed();
+        this.__animations.barrel_meter.animator.proceed();
+        if (this.isShooting) {
+            this.__animations.barrel_shoot.animator.proceed();
+        } else {
+            this.update_powerPercentage();
         }
-
     }
     update_powerPercentage() {
         this.powerPercent += this.powerVelocity;
