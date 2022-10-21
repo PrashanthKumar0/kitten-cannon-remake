@@ -53,13 +53,15 @@ async function preload() {
     registerKeyEventCallback(KEYS.s, () => { cannon.barrelDown(); });
     registerKeyEventCallback(KEYS.arrowdown, () => { cannon.barrelDown(); });
     registerKeyEventCallback(KEYS.space, () => {
-        cannon.barrelShoot();
-        let barrelDir = cannon.getBarrelDirectionVector();
-        kitty.visible = true;
-        kitty.position = cannon.getBarrelEnd()
-            .subtract(barrelDir.copy().scale(32))
-            .subtract(new Vector2D(kitty.width / 2, kitty.height / 2));
-        kitty.throw(barrelDir.scale((cannon.powerPercent / 100) * 80));
+        if (!kitty.visible) {
+            cannon.barrelShoot();
+            let barrelDir = cannon.getBarrelDirectionVector();
+            kitty.visible = true;
+            kitty.position = cannon.getBarrelEnd()
+                .subtract(barrelDir.copy().scale(32))
+                .subtract(new Vector2D(kitty.width / 2, kitty.height / 2));
+            kitty.throw(barrelDir.scale((cannon.powerPercent / 100) * 80));
+        }
     });
 
 }
@@ -69,14 +71,18 @@ let bg = new Image();
 bg.src = "ref_images/game_over.png";
 
 function gameLoop() {
-    
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // ctx.drawImage(bg, 0, 0);
     grass.draw();
     cannon.draw();
     kitty.draw();
     kitty.update();
-
+    if (kitty.visible && !kitty.isDead) {
+        grass.x -= kitty.velocity.x;
+        cannon.x -= kitty.velocity.x;
+    }
+    // ctx.fillRect(kitty.position.x,kitty.position.y,kitty.width,kitty.height);
 
     cannon.update();
 

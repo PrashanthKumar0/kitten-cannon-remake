@@ -24,8 +24,11 @@ export default class Cannon {
         this.__animations = {};
         this.__addMeterAnimator();
         this.__addBarrelShootAnimator();
-
         this.isShooting = false;
+        this.x = 0;
+        this.y = 0;
+        // this.virtualPosXMax = this.__ctx.canvas.width - 250;
+    
     }
 
     __addMeterAnimator() {
@@ -118,6 +121,8 @@ export default class Cannon {
 
 
     draw() {
+        this.__ctx.save();
+        this.__ctx.translate(this.x,0);
         if (this.isShooting) {
             this.draw_barrelShootAnimation();
         } else {
@@ -128,6 +133,7 @@ export default class Cannon {
         this.draw_cannonBase();
         this.draw_cannonDial();
         this.draw_barrelAngleText();
+        this.__ctx.restore();
 
     }
     draw_cannonBase() {

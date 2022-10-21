@@ -10,7 +10,7 @@ export default class Kitten {
             this.__frames_hq.push(sprite_sheet.getFrame(animName));
         });
 
-        this.minVelocityMagSq = 10**2;
+        this.minVelocityMagSq = 10 ** 2;
         this.boneBreakingVelocityMagSq = this.minVelocityMagSq;
         this.__frames_lq = [];
         let kitty_lq_anim_names = sprite_sheet.getAnimationFrames("kitty");
@@ -22,6 +22,7 @@ export default class Kitten {
         this.groundDampFactor = 0.7;
 
         this.position = new Vector2D(0, 0);
+        this.origin = this.position.copy();
         this.velocity = new Vector2D(5, -5);
         this.gravity = new Vector2D(0, 1.0);
         let ar = this.__frames_hq[0].getWidth() / this.__frames_hq[0].getHeight();
@@ -32,16 +33,17 @@ export default class Kitten {
         this.in_jerk = false;
         this.isDead = false;
         this.visible = false;
-        this.omega = 0;
+        this.omega = 0.05;
+        this.virtualPosXMax = this.__ctx.canvas.width - 300;
     }
 
     throw(velocity) {
         this.rotation = velocity.getAngle();
         this.velocity = velocity;
         this.in_jerk = true;
+        this.origin = this.position.copy();
     }
     update() {
-        this.omaga = 0.5;
         if (!this.visible) return;
         this.in_jerk = false;
         if (this.isDead) {
@@ -53,25 +55,28 @@ export default class Kitten {
         this.velocity.add(this.gravity);
         if (this.position.y + this.height > this.groundLevel) {
             this.position.y = this.groundLevel - this.height;
-            let velMagSq=this.velocity.magSq();
-            if ( velMagSq <= this.minVelocityMagSq) {
+            let velMagSq = this.velocity.magSq();
+            if (velMagSq <= this.minVelocityMagSq) {
                 this.isDead = true;
                 return;
             }
             this.velocity.y *= -this.groundDampFactor;
             this.velocity.x *= this.groundDampFactor;
-            if(velMagSq >= this.boneBreakingVelocityMagSq){
+            if (velMagSq >= this.boneBreakingVelocityMagSq) {
                 this.spriteIndex = Math.floor(Math.random() * this.__frames_hq.length);
             }
-            if(velMagSq >= 15**2){
+            if (velMagSq >= 15 ** 2) {
                 this.in_jerk = true;
             }
-            this.omaga = (this.velocity.x);
+            this.omega = this.velocity.x / 120;
         }
         this.rotation += this.omega;
-        this.position.x %= Math.floor(this.__ctx.canvas.width);
+        // this.position.x %= Math.floor(this.__ctx.canvas.width);
     }
 
+    getTranslationVec() {
+        return new Vector2D(this.position.x - this.origin.x, 0);
+    }
 
     draw() {
         if (!this.visible) return;
@@ -84,6 +89,7 @@ export default class Kitten {
         let y = this.position.y;
         let w = this.width;
         let h = this.height;
+        if (x >= this.virtualPosXMax) x = this.virtualPosXMax;
         this.__ctx.save();
         this.__ctx.translate(x + w / 2, y + h / 2);
         this.__ctx.rotate(this.rotation);
