@@ -16,4 +16,5 @@ canvas{
     box-shadow:0px 0px 30px #222;
     display: block;
     background: white;
+    background: linear-gradient(to bottom, skyblue,white);
 }

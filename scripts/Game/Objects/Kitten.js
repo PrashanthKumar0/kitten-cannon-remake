@@ -54,14 +54,6 @@ export default class Kitten {
             console.log("dead");
             return;
         }
-        this.bloodParticles.forEach((blood, idx) => {
-            blood.position.x -= this.velocity.x;
-            if (blood.position.x + blood.width <= 0) {
-                this.bloodParticles.splice(idx, 1);
-            }
-            // blood.update();
-        });
-
         this.position.add(this.velocity).y;
         if (this.position.x >= this.virtualPosXMax) {
             this.position.x = this.virtualPosXMax;
@@ -91,7 +83,15 @@ export default class Kitten {
         this.rotation += this.omega;
     
     }
-
+    update_blood_particles(xVelocity){
+        
+        this.bloodParticles.forEach((blood, idx) => {
+            blood.position.x -= xVelocity;
+            if (blood.position.x + blood.width <= 0) {
+                this.bloodParticles.splice(idx, 1);
+            }
+        });
+    }
     getTranslationVec() {
         return new Vector2D(this.position.x - this.origin.x, 0);
     }

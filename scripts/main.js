@@ -84,6 +84,7 @@ function gameLoop() {
     if (kitty.visible && !kitty.isDead) {
         grass.x -= kitty.velocity.x;
         cannon.x -= kitty.velocity.x;
+        kitty.update_blood_particles(kitty.velocity.x);
         // kitty.blood -= kitty.velocity.x;
         // kitty.bloodParticles.forEach(blood => {
             // blood.update();
