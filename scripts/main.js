@@ -35,7 +35,7 @@ let sprite;
 let grass, cannon;
 let ground_ref;
 let kitty;
-const OBJECT_GAP = 250;
+const OBJECT_GAP = 600;
 let objectGenerator;
 async function preload() {
     console.log("start loading");
@@ -44,8 +44,7 @@ async function preload() {
     grass = new Grass(ctx, sprite);
     cannon = new Cannon(ctx, sprite);
     kitty = new Kitten(ctx, sprite);
-    objectGenerator = new ObjectGenerator(ctx, sprite, OBJECT_GAP);
-    
+    objectGenerator = new ObjectGenerator(ctx, sprite, kitty, OBJECT_GAP);
     ground_ref = canvas.height - 60;
 
     KEYS.r = "r";
@@ -84,15 +83,13 @@ function gameLoop() {
     if (kitty.visible && !kitty.isDead) {
         grass.x -= kitty.velocity.x;
         cannon.x -= kitty.velocity.x;
-        kitty.update_blood_particles(kitty.velocity.x);
-        // kitty.blood -= kitty.velocity.x;
-        // kitty.bloodParticles.forEach(blood => {
-            // blood.update();
-        // });
-        // kitty.bloodPar
+        kitty.update_blood_particles(kitty.velocity.x); // these interfaces are bad for now
+        // objectGenerator.update(kitty.velocity.x);
     }
-    // ctx.fillRect(kitty.position.x,kitty.position.y,kitty.width,kitty.height);
+    objectGenerator.update();
 
+
+    objectGenerator.drawAll();
     cannon.update();
 
     handleKeyboardCallbacks();
