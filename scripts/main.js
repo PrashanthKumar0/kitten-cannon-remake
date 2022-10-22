@@ -7,6 +7,7 @@ import Grass from "./Game/Objects/Grass.js";
 import Cannon from "./Game/Objects/Cannon.js";
 import { KEYS, handleKeyboardCallbacks, registerKeyEventCallback } from "./Game/KeyboardController.js";
 import Kitten from "./Game/Objects/Kitten.js";
+import ObjectGenerator from "./Game/Objects/ObjectGenerator.js";
 //  production 
 // console.log=()=>{};
 
@@ -34,6 +35,8 @@ let sprite;
 let grass, cannon;
 let ground_ref;
 let kitty;
+const OBJECT_GAP = 250;
+let objectGenerator;
 async function preload() {
     console.log("start loading");
     sprite = await new Sprite("assets/sprite_sheet/kitty_cannon_dat").load();
@@ -41,8 +44,8 @@ async function preload() {
     grass = new Grass(ctx, sprite);
     cannon = new Cannon(ctx, sprite);
     kitty = new Kitten(ctx, sprite);
-    // ground_ref = canvas.height - 36;
-    // ground_ref = canvas.height - 60;
+    objectGenerator = new ObjectGenerator(ctx, sprite, OBJECT_GAP);
+    
     ground_ref = canvas.height - 60;
 
     KEYS.r = "r";
@@ -81,6 +84,11 @@ function gameLoop() {
     if (kitty.visible && !kitty.isDead) {
         grass.x -= kitty.velocity.x;
         cannon.x -= kitty.velocity.x;
+        // kitty.blood -= kitty.velocity.x;
+        // kitty.bloodParticles.forEach(blood => {
+            // blood.update();
+        // });
+        // kitty.bloodPar
     }
     // ctx.fillRect(kitty.position.x,kitty.position.y,kitty.width,kitty.height);
 

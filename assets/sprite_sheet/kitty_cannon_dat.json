@@ -1285,7 +1285,7 @@
 	"baloon_blast": ["baloon_blast/1.png","baloon_blast/2.png"],
 	"barrel_shoot": ["barrel_shoot/1.png","barrel_shoot/2.png","barrel_shoot/3.png","barrel_shoot/4.png","barrel_shoot/5.png","barrel_shoot/6.png","barrel_shoot/7.png","barrel_shoot/8.png","barrel_shoot/9.png","barrel_shoot/10.png","barrel_shoot/11.png","barrel_shoot/12.png","barrel_shoot/13.png","barrel_shoot/14.png","barrel_shoot/15.png","barrel_shoot/16.png","barrel_shoot/17.png","barrel_shoot/18.png","barrel_shoot/19.png","barrel_shoot/20.png","barrel_shoot/21.png"],
 	"blast_round": ["blast_round/1.png","blast_round/2.png","blast_round/3.png","blast_round/4.png","blast_round/5.png","blast_round/6.png","blast_round/7.png","blast_round/8.png","blast_round/9.png","blast_round/10.png","blast_round/11.png","blast_round/12.png","blast_round/13.png","blast_round/14.png","blast_round/15.png","blast_round/16.png","blast_round/17.png","blast_round/18.png","blast_round/19.png","blast_round/20.png","blast_round/21.png"],
-	"blood": ["blood/1.png","blood/2.png","blood/3.png","blood/4.png"],
+	"blood": ["blood/2.png","blood/3.png","blood/4.png"],
 	"cannon_meter": ["cannon_meter/1.png","cannon_meter/2.png","cannon_meter/3.png","cannon_meter/4.png","cannon_meter/5.png","cannon_meter/6.png","cannon_meter/7.png","cannon_meter/8.png","cannon_meter/9.png","cannon_meter/10.png"],
 	"kitty": ["kitty/1.png","kitty/2.png","kitty/3.png"],
 	"kitty_hq": ["kitty_hq/1.png","kitty_hq/2.png","kitty_hq/3.png"],

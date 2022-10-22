@@ -1,9 +1,10 @@
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
+import bloodParticle from "./BloodParticle.js";
 
 export default class Kitten {
     constructor(canvas2D_context, sprite_sheet) {
         this.__ctx = canvas2D_context;
-
+        this.__sprite_sheet = sprite_sheet;
         this.__frames_hq = [];
         let kitty_hq_anim_names = sprite_sheet.getAnimationFrames("kitty_hq");
         kitty_hq_anim_names.forEach((animName) => {
@@ -35,6 +36,7 @@ export default class Kitten {
         this.visible = false;
         this.omega = 0.05;
         this.virtualPosXMax = this.__ctx.canvas.width - 300;
+        this.bloodParticles = [];
     }
 
     throw(velocity) {
@@ -44,6 +46,7 @@ export default class Kitten {
         this.origin = this.position.copy();
     }
     update() {
+
         if (!this.visible) return;
         this.in_jerk = false;
         if (this.isDead) {
@@ -51,18 +54,33 @@ export default class Kitten {
             console.log("dead");
             return;
         }
-        this.position.add(this.velocity);
+        this.bloodParticles.forEach((blood, idx) => {
+            blood.position.x -= this.velocity.x;
+            if (blood.position.x + blood.width <= 0) {
+                this.bloodParticles.splice(idx, 1);
+            }
+            // blood.update();
+        });
+
+        this.position.add(this.velocity).y;
+        if (this.position.x >= this.virtualPosXMax) {
+            this.position.x = this.virtualPosXMax;
+        }
+        this.position.y = this.position.copy().add(this.velocity).y;
+
         this.velocity.add(this.gravity);
         if (this.position.y + this.height > this.groundLevel) {
             this.position.y = this.groundLevel - this.height;
             let velMagSq = this.velocity.magSq();
             if (velMagSq <= this.minVelocityMagSq) {
                 this.isDead = true;
+                this.spawnBlood();
                 return;
             }
             this.velocity.y *= -this.groundDampFactor;
             this.velocity.x *= this.groundDampFactor;
             if (velMagSq >= this.boneBreakingVelocityMagSq) {
+                this.spawnBlood();
                 this.spriteIndex = Math.floor(Math.random() * this.__frames_hq.length);
             }
             if (velMagSq >= 15 ** 2) {
@@ -71,16 +89,26 @@ export default class Kitten {
             this.omega = this.velocity.x / 120;
         }
         this.rotation += this.omega;
-        // this.position.x %= Math.floor(this.__ctx.canvas.width);
+    
     }
 
     getTranslationVec() {
         return new Vector2D(this.position.x - this.origin.x, 0);
     }
 
+    spawnBlood() {
+        this.bloodParticles.push(new bloodParticle(this.__ctx, this.__sprite_sheet, this.position.copy().add(new Vector2D(0, this.height / 2))));
+    }
     draw() {
+        this.__draw_blood();
         if (!this.visible) return;
         this.__drawKitten();
+    }
+    __draw_blood() {
+        this.bloodParticles.forEach((blood) => {
+            blood.draw();
+        });
+        // this.__ctx.fillRect(this.position.x + this.width/2,this.position.y+ this.height/2,100,100);
     }
     __drawKitten() {
         let frame = this.__frames_hq[this.spriteIndex];
@@ -89,7 +117,6 @@ export default class Kitten {
         let y = this.position.y;
         let w = this.width;
         let h = this.height;
-        if (x >= this.virtualPosXMax) x = this.virtualPosXMax;
         this.__ctx.save();
         this.__ctx.translate(x + w / 2, y + h / 2);
         this.__ctx.rotate(this.rotation);
