@@ -42,8 +42,15 @@ export class Vector2D {
         return this;
 
     }
-
-    magSq(){
-        return (this.x**2 + this.y**2);
+    mag() {
+        return Math.hypot(this.y, this.x);
+    }
+    normalize() {
+        this.x /= this.mag();
+        this.y /= this.mag();
+        return this;
+    }
+    magSq() {
+        return (this.x ** 2 + this.y ** 2);
     }
 }

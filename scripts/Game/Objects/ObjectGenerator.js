@@ -1,5 +1,6 @@
 import { checkRectRectCollision, randomInt } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
+import Bomb from "./Bomb.js";
 import Spike from "./Spike.js";
 import Venus from "./Venus.js";
 
@@ -47,6 +48,13 @@ export default class ObjectGenerator {
                         this.kitty.position.y += 1;
                     }
                 }
+
+                if (object instanceof Bomb) {
+                    this.kitty.isDead = false;
+                    this.kitty.visible = true;
+                    this.kitty.velocity.add(new Vector2D(50,100));
+                    this.kitty.update();
+                }
             }
 
 
@@ -57,7 +65,7 @@ export default class ObjectGenerator {
         });
     }
     generateNewObject() {
-        let rand = randomInt(0, 1);
+        let rand = randomInt(0, 2);
         switch (rand) {
             case 0: // VENUS
                 {
@@ -76,6 +84,15 @@ export default class ObjectGenerator {
                     }
                     pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
                     return new Spike(this.__ctx, this.__sprite_sheet, pos);
+                }
+            case 2: // Bomb
+                {
+                    let pos = new Vector2D(this.__ctx.canvas.width + this.gap_inbetween, this.__ctx.canvas.height - 200)
+                    if (this.objects.length == 0) {
+                        return new Bomb(this.__ctx, this.__sprite_sheet, pos);
+                    }
+                    pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
+                    return new Bomb(this.__ctx, this.__sprite_sheet, pos);
                 }
 
         }

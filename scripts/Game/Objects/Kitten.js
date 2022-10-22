@@ -37,6 +37,7 @@ export default class Kitten {
         this.omega = 0.05;
         this.virtualPosXMax = this.__ctx.canvas.width - 300;
         this.bloodParticles = [];
+        this.maxVelMagSq = 80*80;
     }
 
     throw(velocity) {
