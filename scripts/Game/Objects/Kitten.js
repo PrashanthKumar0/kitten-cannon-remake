@@ -51,6 +51,7 @@ export default class Kitten {
         this.in_jerk = false;
         if (this.isDead) {
             this.position.y = this.groundLevel - this.height;
+            this.velocity=new Vector2D(0,0);
             console.log("dead");
             return;
         }
@@ -117,6 +118,7 @@ export default class Kitten {
         let y = this.position.y;
         let w = this.width;
         let h = this.height;
+        // this.__ctx.fillRect( x, y, w, h);
         this.__ctx.save();
         this.__ctx.translate(x + w / 2, y + h / 2);
         this.__ctx.rotate(this.rotation);

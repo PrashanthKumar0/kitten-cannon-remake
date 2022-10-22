@@ -18,3 +18,6 @@ export function checkRectRectCollision(obj1, obj2) {
         ((obj1.y + obj1.height >= obj2.y) && (obj1.y <= obj2.y + obj2.height))
     );
 }
+export function randomInt(min,max){
+    return Math.round(min+Math.random()*(max-min));
+}

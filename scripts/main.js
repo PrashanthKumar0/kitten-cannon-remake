@@ -35,7 +35,7 @@ let sprite;
 let grass, cannon;
 let ground_ref;
 let kitty;
-const OBJECT_GAP = 600;
+const OBJECT_GAP = 700;
 let objectGenerator;
 async function preload() {
     console.log("start loading");
@@ -55,7 +55,7 @@ async function preload() {
     registerKeyEventCallback(KEYS.s, () => { cannon.barrelDown(); });
     registerKeyEventCallback(KEYS.arrowdown, () => { cannon.barrelDown(); });
     registerKeyEventCallback(KEYS.space, () => {
-        if (!kitty.visible) {
+        if (!kitty.visible && !kitty.isDead) {
             cannon.barrelShoot();
             let barrelDir = cannon.getBarrelDirectionVector();
             kitty.visible = true;

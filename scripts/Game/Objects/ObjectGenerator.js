@@ -1,5 +1,6 @@
-import { checkRectRectCollision } from "../../Lib/Math/functions.js";
+import { checkRectRectCollision, randomInt } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
+import Spike from "./Spike.js";
 import Venus from "./Venus.js";
 
 export default class ObjectGenerator {
@@ -14,7 +15,6 @@ export default class ObjectGenerator {
     drawAll() {
         this.objects.forEach((object) => {
             object.draw();
-            // debugger;
         });
     }
     update() {
@@ -22,19 +22,13 @@ export default class ObjectGenerator {
             this.objects.push(this.generateNewObject());
         }
         this.objects.forEach((object, idx) => {
-            if (!this.kitty.isDead) {
+            if (!(this.kitty.isDead || !this.kitty.visible)) {
                 object.position.x -= this.kitty.velocity.x;
             }
             object.update();
-
             if (
                 checkRectRectCollision(
-                    {
-                        'x': object.position.x,
-                        'y': object.position.y,
-                        'width': object.width,
-                        'height': object.height,
-                    },
+                    object.getHitBox(),
                     {
                         'x': this.kitty.position.x,
                         'y': this.kitty.position.y,
@@ -43,9 +37,16 @@ export default class ObjectGenerator {
                     }
                 )
             ) {
-                this.kitty.isDead = true;
                 this.kitty.visible = false;
+                this.kitty.isDead = true;
                 object.shouldAnimate = true;
+
+                if (object instanceof Spike) {
+                    this.kitty.visible = true;
+                    if (this.kitty.position.y < this.kitty.groundLevel) {
+                        this.kitty.position.y += 1;
+                    }
+                }
             }
 
 
@@ -56,13 +57,27 @@ export default class ObjectGenerator {
         });
     }
     generateNewObject() {
-        let prevPos;
-        if (this.objects.length == 0) {
-            let pos = new Vector2D(this.__ctx.canvas.width + this.gap_inbetween, this.__ctx.canvas.height - 250);
-            return new Venus(this.__ctx, this.__sprite_sheet, pos);
-        } else {
-            prevPos = this.objects[this.objects.length - 1].position.copy();
+        let rand = randomInt(0, 1);
+        switch (rand) {
+            case 0: // VENUS
+                {
+                    let pos = new Vector2D(this.__ctx.canvas.width + this.gap_inbetween, this.__ctx.canvas.height - 250)
+                    if (this.objects.length == 0) {
+                        return new Venus(this.__ctx, this.__sprite_sheet, pos);
+                    }
+                    pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
+                    return new Venus(this.__ctx, this.__sprite_sheet, pos);
+                }
+            case 1: // Spike
+                {
+                    let pos = new Vector2D(this.__ctx.canvas.width + this.gap_inbetween, this.__ctx.canvas.height - 170)
+                    if (this.objects.length == 0) {
+                        return new Spike(this.__ctx, this.__sprite_sheet, pos);
+                    }
+                    pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
+                    return new Spike(this.__ctx, this.__sprite_sheet, pos);
+                }
+
         }
-        return new Venus(this.__ctx, this.__sprite_sheet, prevPos.add(new Vector2D(this.gap_inbetween, 0)));
     }
 }
