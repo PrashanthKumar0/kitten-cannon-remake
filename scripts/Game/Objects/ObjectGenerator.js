@@ -1,6 +1,7 @@
 import { checkRectRectCollision, randomInt } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
 import Balloon from "./Balloon.js";
+import Blast from "./Blast.js";
 import Bomb from "./Bomb.js";
 import Spike from "./Spike.js";
 import Trampoline from "./Trampoline.js";
@@ -29,9 +30,15 @@ export default class ObjectGenerator {
                 object.position.x -= this.kitty.velocity.x;
             }
             object.update();
+            let hitBox;
+            if(object.getHitBox){
+                hitBox=object.getHitBox();
+            }else{
+                hitBox={ x: 0, y: 0, width: 0, height: 0 };
+            }
             if (
                 checkRectRectCollision(
-                    object.getHitBox(),
+                    hitBox,
                     {
                         'x': this.kitty.position.x,
                         'y': this.kitty.position.y,
@@ -73,12 +80,12 @@ export default class ObjectGenerator {
                         this.kitty.update();
                     }
                 }
-
                 if (object instanceof Bomb) {
                     this.kitty.isDead = false;
                     this.kitty.visible = true;
                     this.kitty.velocity.add(new Vector2D(50, 100));
                     this.kitty.update();
+                    this.objects.push(new Blast(this.__ctx, this.__sprite_sheet, new Vector2D(hitBox.x,hitBox.y)));
                 }
 
                 if ((object instanceof Balloon)) {
@@ -88,6 +95,7 @@ export default class ObjectGenerator {
                         this.kitty.update();
                         this.kitty.velocity.add(new Vector2D(35, 100));
                     }
+                    this.objects.push(new Blast(this.__ctx, this.__sprite_sheet, new Vector2D(hitBox.x,hitBox.y)));
                 }
             }
 
@@ -100,7 +108,7 @@ export default class ObjectGenerator {
     }
     generateNewObject() {
         let rand = randomInt(0, 4);
-        // let rand = 2;
+        // let rand = 4;
         switch (rand) {
             case 0: // VENUS
                 {
