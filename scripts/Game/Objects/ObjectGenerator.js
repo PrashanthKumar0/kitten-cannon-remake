@@ -2,6 +2,7 @@ import { checkRectRectCollision, randomInt } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
 import Bomb from "./Bomb.js";
 import Spike from "./Spike.js";
+import Trampoline from "./Trampoline.js";
 import Venus from "./Venus.js";
 
 export default class ObjectGenerator {
@@ -49,10 +50,34 @@ export default class ObjectGenerator {
                     }
                 }
 
+                if (object instanceof Trampoline) {
+                    this.kitty.isDead = false;
+                    this.kitty.visible = true;
+                    this.kitty.velocity.scale(1.4);
+                    this.kitty.velocity.y *= -1;
+                    let box = object.getHitBox();
+                    // this.kitty.position = new Vector2D(box.x + box.width + this.kitty.width + 3, box.y - this.kitty.height - 3);
+                    let itr=0;
+                    while(checkRectRectCollision(
+                        object.getHitBox(),
+                        {
+                            'x': this.kitty.position.x,
+                            'y': this.kitty.position.y,
+                            'width': this.kitty.width,
+                            'height': this.kitty.height,
+                        }
+                    )){
+                        itr++;
+                        if(itr>30) break;
+                        this.kitty.update();
+                    }   
+                    console.log("boing...");
+                }
+
                 if (object instanceof Bomb) {
                     this.kitty.isDead = false;
                     this.kitty.visible = true;
-                    this.kitty.velocity.add(new Vector2D(50,100));
+                    this.kitty.velocity.add(new Vector2D(50, 100));
                     this.kitty.update();
                 }
             }
@@ -65,7 +90,8 @@ export default class ObjectGenerator {
         });
     }
     generateNewObject() {
-        let rand = randomInt(0, 2);
+        let rand = randomInt(0, 3);
+        // let rand = 3;
         switch (rand) {
             case 0: // VENUS
                 {
@@ -93,6 +119,15 @@ export default class ObjectGenerator {
                     }
                     pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
                     return new Bomb(this.__ctx, this.__sprite_sheet, pos);
+                }
+            case 3: // Trampoline
+                {
+                    let pos = new Vector2D(this.__ctx.canvas.width + this.gap_inbetween, this.__ctx.canvas.height - 136)
+                    if (this.objects.length == 0) {
+                        return new Trampoline(this.__ctx, this.__sprite_sheet, pos);
+                    }
+                    pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
+                    return new Trampoline(this.__ctx, this.__sprite_sheet, pos);
                 }
 
         }

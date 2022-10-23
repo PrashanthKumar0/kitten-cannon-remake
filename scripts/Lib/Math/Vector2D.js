@@ -46,8 +46,9 @@ export class Vector2D {
         return Math.hypot(this.y, this.x);
     }
     normalize() {
-        this.x /= this.mag();
-        this.y /= this.mag();
+        let mag = this.mag();
+        this.x /= mag;
+        this.y /= mag;
         return this;
     }
     magSq() {

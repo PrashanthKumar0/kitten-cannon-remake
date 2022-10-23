@@ -35,7 +35,7 @@ let sprite;
 let grass, cannon;
 let ground_ref;
 let kitty;
-const OBJECT_GAP = 700;
+const OBJECT_GAP = 800;
 let objectGenerator;
 async function preload() {
     console.log("start loading");
