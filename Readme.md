@@ -13,3 +13,5 @@ TODO : (Lots of things actually).
 - [ ] Stagger frame in sprite Animator . (manage sprite fps dynamically)
 - [ ] Maybe add # for private fields in js
 - [ ] correct Bomb class sprite sheet 
+- [ ] make UI interactive (endgame) 
+- [ ] make game menu

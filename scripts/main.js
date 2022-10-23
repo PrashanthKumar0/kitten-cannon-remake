@@ -8,6 +8,7 @@ import Cannon from "./Game/Objects/Cannon.js";
 import { KEYS, handleKeyboardCallbacks, registerKeyEventCallback } from "./Game/KeyboardController.js";
 import Kitten from "./Game/Objects/Kitten.js";
 import ObjectGenerator from "./Game/Objects/ObjectGenerator.js";
+import ScoreBoard from "./Game/Objects/ScoreBoard.js";
 //  production 
 // console.log=()=>{};
 
@@ -37,6 +38,7 @@ let ground_ref;
 let kitty;
 const OBJECT_GAP = 800;
 let objectGenerator;
+let score_board;
 async function preload() {
     console.log("start loading");
     sprite = await new Sprite("assets/sprite_sheet/kitty_cannon_dat").load();
@@ -46,7 +48,7 @@ async function preload() {
     kitty = new Kitten(ctx, sprite);
     objectGenerator = new ObjectGenerator(ctx, sprite, kitty, OBJECT_GAP);
     ground_ref = canvas.height - 60;
-
+    score_board = new ScoreBoard(ctx);
     KEYS.r = "r";
     registerKeyEventCallback(KEYS.r, () => { cannon.resetCannon(); }); // temporarry
 
@@ -71,11 +73,20 @@ async function preload() {
 
 let bg = new Image();
 bg.src = "ref_images/game_over.png";
+const pixel_per_feet = 500;
+let distance_travelled_px = 0;
 
+// 200 px = 1 meter
 function gameLoop() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // ctx.drawImage(bg, 0, 0);
+    // this will be in kitty.getScore();
+    let distance_travelled = (distance_travelled_px / pixel_per_feet).toFixed(0);
+    // let distance_travelled = 45;
+    score_board.score = distance_travelled;
+    score_board.highScore = distance_travelled;
+    score_board.draw();
     grass.draw();
     cannon.draw();
     kitty.draw();
@@ -83,8 +94,14 @@ function gameLoop() {
     if (kitty.visible && !kitty.isDead) {
         grass.x -= kitty.velocity.x;
         cannon.x -= kitty.velocity.x;
-        kitty.update_blood_particles(kitty.velocity.x); // these interfaces are bad for now
+        kitty.update_blood_particles(kitty.velocity.x); // these interfaces are bad for now 
+        distance_travelled_px += kitty.velocity.x;
         // objectGenerator.update(kitty.velocity.x);
+    }
+
+
+    if (kitty.isDead) {
+        score_board.visible = true;
     }
     objectGenerator.update();
 
