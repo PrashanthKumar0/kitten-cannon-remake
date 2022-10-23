@@ -1,5 +1,6 @@
 import { checkRectRectCollision, randomInt } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
+import Balloon from "./Balloon.js";
 import Bomb from "./Bomb.js";
 import Spike from "./Spike.js";
 import Trampoline from "./Trampoline.js";
@@ -55,10 +56,10 @@ export default class ObjectGenerator {
                     this.kitty.visible = true;
                     this.kitty.velocity.scale(1.4);
                     this.kitty.velocity.y *= -1;
-                    let box = object.getHitBox();
+                    // let box = object.getHitBox();
                     // this.kitty.position = new Vector2D(box.x + box.width + this.kitty.width + 3, box.y - this.kitty.height - 3);
-                    let itr=0;
-                    while(checkRectRectCollision(
+                    let itr = 0;
+                    while (checkRectRectCollision(
                         object.getHitBox(),
                         {
                             'x': this.kitty.position.x,
@@ -66,12 +67,11 @@ export default class ObjectGenerator {
                             'width': this.kitty.width,
                             'height': this.kitty.height,
                         }
-                    )){
+                    )) {
                         itr++;
-                        if(itr>30) break;
+                        if (itr > 30) break;
                         this.kitty.update();
-                    }   
-                    console.log("boing...");
+                    }
                 }
 
                 if (object instanceof Bomb) {
@@ -79,6 +79,15 @@ export default class ObjectGenerator {
                     this.kitty.visible = true;
                     this.kitty.velocity.add(new Vector2D(50, 100));
                     this.kitty.update();
+                }
+
+                if ((object instanceof Balloon)) {
+                    this.kitty.isDead = false;
+                    this.kitty.visible = true;
+                    if (!object.exploded) {
+                        this.kitty.update();
+                        this.kitty.velocity.add(new Vector2D(35, 100));
+                    }
                 }
             }
 
@@ -90,8 +99,8 @@ export default class ObjectGenerator {
         });
     }
     generateNewObject() {
-        let rand = randomInt(0, 3);
-        // let rand = 3;
+        let rand = randomInt(0, 4);
+        // let rand = 2;
         switch (rand) {
             case 0: // VENUS
                 {
@@ -130,6 +139,15 @@ export default class ObjectGenerator {
                     return new Trampoline(this.__ctx, this.__sprite_sheet, pos);
                 }
 
+            case 4: // Baloon
+                {
+                    let pos = new Vector2D(this.__ctx.canvas.width + this.gap_inbetween, this.__ctx.canvas.height - 400)
+                    if (this.objects.length == 0) {
+                        return new Balloon(this.__ctx, this.__sprite_sheet, pos);
+                    }
+                    pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
+                    return new Balloon(this.__ctx, this.__sprite_sheet, pos);
+                }
         }
     }
 }

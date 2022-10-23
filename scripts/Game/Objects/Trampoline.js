@@ -36,7 +36,7 @@ export default class Trampoline {
         };
     }
     draw() {
-        let box = this.getHitBox();
+        // let box = this.getHitBox();
         let frame = this.__animator.getCurrentFrame();
         frame.draw(this.__ctx, this.position.x, this.position.y, this.width, this.height)
         

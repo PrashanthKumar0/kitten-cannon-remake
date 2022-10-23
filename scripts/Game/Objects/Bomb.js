@@ -38,7 +38,7 @@ export default class Bomb {
         };
     }
     draw() {
-        let box = this.getHitBox();
+        // let box = this.getHitBox();
         // this.__ctx.fillRect(box.x, box.y, box.width, box.height);        
         let frame = this.__blast_animator.getCurrentFrame();
         frame.draw(this.__ctx, this.position.x, this.position.y, this.width, this.height)
