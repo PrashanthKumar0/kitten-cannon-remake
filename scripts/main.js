@@ -49,6 +49,8 @@ async function preload() {
     objectGenerator = new ObjectGenerator(ctx, sprite, kitty, OBJECT_GAP);
     ground_ref = canvas.height - 60;
     score_board = new ScoreBoard(ctx);
+
+
     KEYS.r = "r";
     registerKeyEventCallback(KEYS.r, () => { cannon.resetCannon(); }); // temporarry
 
@@ -98,7 +100,6 @@ function gameLoop() {
         distance_travelled_px += kitty.velocity.x;
         // objectGenerator.update(kitty.velocity.x);
     }
-
 
     if (kitty.isDead) {
         score_board.visible = true;

@@ -1,12 +1,38 @@
+import { Vector2D } from "../../Lib/Math/Vector2D.js";
+import Button from "../UI/Button.js";
+
 export default class ScoreBoard {
     constructor(canvas2D_context) {
         this.__ctx = canvas2D_context;
         this.score = "";
         this.highScore = "";
         this.visible = false;
+        this.buttons = {};
+        this.__create_buttons();
     }
+
+    __create_buttons() {
+
+        let canvas_w_half = this.__ctx.canvas.width / 2;
+        let canvas_h_half = this.__ctx.canvas.height / 2;
+
+        { // Continue button
+            let text = "Continue";
+            let font_width = this.__ctx.measureText(text).width;
+            let position = new Vector2D(canvas_w_half - font_width * 3 / 2, canvas_h_half);
+            this.buttons["continue"] = new Button(this.__ctx, text, position, 44, "#ff680b", "Test");
+        }
+
+        { // Exit to menu button
+            let text = "Exit to menu";
+            let font_width = this.__ctx.measureText(text).width;
+            let position = new Vector2D(canvas_w_half - font_width * 3 / 2, canvas_h_half + 38);
+            this.buttons["exit_to_continue"] = new Button(this.__ctx, text, position, 44, "#666", "Test");
+        }
+    }
+
     draw() {
-        if(!this.visible) return;
+        if (!this.visible) return;
         let canvas_w_half = this.__ctx.canvas.width / 2;
         let canvas_h_half = this.__ctx.canvas.height / 2;
 
@@ -46,14 +72,13 @@ export default class ScoreBoard {
 
         }
 
-        this.__ctx.textBaseline = "center";
-
+        this.__ctx.textBaseline = "top";
         { // Score
             this.__ctx.font = "130px Test";
             this.__ctx.fillStyle = "#060";
             let txt = this.score + " ft";
             let font_width = this.__ctx.measureText(txt).width;
-            this.__ctx.fillText(txt, canvas_w_half - font_width / 2, canvas_h_half - 88);
+            this.__ctx.fillText(txt, canvas_w_half - font_width / 2, canvas_h_half - 198);
         }
         { // High Score
             let txt = "Your High Score: " + this.highScore + " ft";
@@ -61,24 +86,10 @@ export default class ScoreBoard {
             this.__ctx.fillStyle = "#060";
             // this.__ctx.fillStyle = "#000";
             let font_width = this.__ctx.measureText(txt).width;
-            this.__ctx.fillText(txt, canvas_w_half - font_width / 2 + 6, canvas_h_half - 32);
+            this.__ctx.fillText(txt, canvas_w_half - font_width / 2 + 6, canvas_h_half - 68);
         }
-
-        { // UI continue
-            let txt = "Continue";
-            this.__ctx.font = "44px Test";
-            this.__ctx.fillStyle = "#ff680b";
-            // this.__ctx.fillStyle = "#000";
-            let font_width = this.__ctx.measureText(txt).width;
-            this.__ctx.fillText(txt, canvas_w_half - font_width / 2 + 2, canvas_h_half + 42);
-        }
-
-        { // UI menu
-            let txt = "Exit to menu";
-            this.__ctx.font = "44px Test";
-            this.__ctx.fillStyle = "#666";
-            let font_width = this.__ctx.measureText(txt).width;
-            this.__ctx.fillText(txt, canvas_w_half - font_width / 2 + 2, canvas_h_half + 78);
+        for (let key in this.buttons) {
+            this.buttons[key].draw();
         }
 
     }
