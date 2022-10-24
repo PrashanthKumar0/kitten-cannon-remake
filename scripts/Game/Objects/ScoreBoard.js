@@ -8,6 +8,8 @@ export default class ScoreBoard {
         this.highScore = "";
         this.visible = false;
         this.buttons = {};
+        this.onContinue = () => { }
+        this.onMenu = () => { }
         this.__create_buttons();
     }
 
@@ -19,8 +21,11 @@ export default class ScoreBoard {
         { // Continue button
             let text = "Continue";
             let font_width = this.__ctx.measureText(text).width;
-            let position = new Vector2D(canvas_w_half - font_width * 3 / 2, canvas_h_half);
+            let position = new Vector2D(canvas_w_half - font_width * 3 / 2, canvas_h_half - 10);
             this.buttons["continue"] = new Button(this.__ctx, text, position, 44, "#ff680b", "Test");
+            this.buttons["continue"].onClick =()=>{
+                 this.onContinue();
+            }
         }
 
         { // Exit to menu button
@@ -28,6 +33,9 @@ export default class ScoreBoard {
             let font_width = this.__ctx.measureText(text).width;
             let position = new Vector2D(canvas_w_half - font_width * 3 / 2, canvas_h_half + 38);
             this.buttons["exit_to_continue"] = new Button(this.__ctx, text, position, 44, "#666", "Test");
+            this.buttons["exit_to_continue"].onClick =()=>{
+                this.onMenu();
+            } 
         }
     }
 
@@ -93,7 +101,12 @@ export default class ScoreBoard {
         }
 
     }
-    update() {
+    updateClickInput(cursor_position_vec) {
 
+        if (!this.visible) return;
+        if (!(cursor_position_vec instanceof Vector2D)) throw Error(" Cursor position should be a vector2D .");
+        for (let button_key in this.buttons) {
+            this.buttons[button_key].updateClickInput(cursor_position_vec);
+        }
     }
 }

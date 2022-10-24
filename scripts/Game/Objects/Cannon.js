@@ -165,10 +165,11 @@ export default class Cannon {
         this.__ctx.fillRect(x, y, w, h);
     }
     draw_barrelAngleText() {
+        this.__ctx.textBaseline="top";
         this.__ctx.font = "15px Arial";
         this.__ctx.fillStyle = "#fdfd97";
         let x = 150;
-        let y = this.__ctx.canvas.height - 118;
+        let y = this.__ctx.canvas.height - 130;
         let txt = (toDegree(Math.abs(this.barrel_angle))).toFixed(1);
         this.__ctx.fillText(txt, x, y);
     }

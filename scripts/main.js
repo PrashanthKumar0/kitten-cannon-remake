@@ -9,6 +9,8 @@ import { KEYS, handleKeyboardCallbacks, registerKeyEventCallback } from "./Game/
 import Kitten from "./Game/Objects/Kitten.js";
 import ObjectGenerator from "./Game/Objects/ObjectGenerator.js";
 import ScoreBoard from "./Game/Objects/ScoreBoard.js";
+import * as TouchController from "./Game/TouchController.js";
+
 //  production 
 // console.log=()=>{};
 
@@ -39,18 +41,45 @@ let kitty;
 const OBJECT_GAP = 800;
 let objectGenerator;
 let score_board;
-async function preload() {
-    console.log("start loading");
-    sprite = await new Sprite("assets/sprite_sheet/kitty_cannon_dat").load();
-    console.log(sprite.name + " loaded...");
+let distance_travelled_px = 0;
+let highest_distance_travelled_px = 0;
+let should_reset = false;
+function reset() {
+    should_reset = false;
+    score_board.visible = false;
     grass = new Grass(ctx, sprite);
     cannon = new Cannon(ctx, sprite);
     kitty = new Kitten(ctx, sprite);
     objectGenerator = new ObjectGenerator(ctx, sprite, kitty, OBJECT_GAP);
     ground_ref = canvas.height - 60;
+    // score reset
+    distance_travelled_px = 0;
+    highest_distance_travelled_px = 0;
+}
+
+function handle_highScore() {
+    if (distance_travelled_px > highest_distance_travelled_px) {
+        highest_distance_travelled_px = distance_travelled_px;
+    }
+}
+
+async function preload() {
+    console.log("start loading");
+    sprite = await new Sprite("assets/sprite_sheet/kitty_cannon_dat").load();
+    console.log(sprite.name + " loaded...");
     score_board = new ScoreBoard(ctx);
+    
+    score_board.onContinue = (async function () {
+        // console.log("continue logic");
+        // reset();
+        should_reset=true;
+    });
+    score_board.onMenu = (async function () {
+        console.log("Menu");
+    })
 
-
+    reset();
+    
     KEYS.r = "r";
     registerKeyEventCallback(KEYS.r, () => { cannon.resetCannon(); }); // temporarry
 
@@ -69,14 +98,12 @@ async function preload() {
             kitty.throw(barrelDir.scale((cannon.powerPercent / 100) * 80));
         }
     });
-
 }
 
 
 let bg = new Image();
 bg.src = "ref_images/game_over.png";
-const pixel_per_feet = 500;
-let distance_travelled_px = 0;
+const pixel_per_feet = 400;
 
 // 200 px = 1 meter
 function gameLoop() {
@@ -85,9 +112,10 @@ function gameLoop() {
     // ctx.drawImage(bg, 0, 0);
     // this will be in kitty.getScore();
     let distance_travelled = (distance_travelled_px / pixel_per_feet).toFixed(0);
-    // let distance_travelled = 45;
+    let highest_distance_travelled = (highest_distance_travelled_px / pixel_per_feet).toFixed(0);
+
     score_board.score = distance_travelled;
-    score_board.highScore = distance_travelled;
+    score_board.highScore = highest_distance_travelled;
     score_board.draw();
     grass.draw();
     cannon.draw();
@@ -102,16 +130,26 @@ function gameLoop() {
     }
 
     if (kitty.isDead) {
+        handle_highScore();
         score_board.visible = true;
     }
     objectGenerator.update();
 
+    ctx.beginPath();
+    ctx.arc(TouchController.TOUCH_INFORMATION.position.x, TouchController.TOUCH_INFORMATION.position.y, 10, 0, Math.PI * 2);
+    ctx.fill();
 
+    if (TouchController.TOUCH_INFORMATION.eventType == TouchController.TOUCH_EVENT_TYPES.down) {
+        score_board.updateClickInput(TouchController.TOUCH_INFORMATION.position);
+    }
     objectGenerator.drawAll();
     cannon.update();
 
     handleKeyboardCallbacks();
 
+    if(should_reset){
+        reset();
+    }
     // setTimeout(gameLoop, 1000 / 60);
     requestAnimationFrame(gameLoop);
 }
