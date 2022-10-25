@@ -1,3 +1,4 @@
+import { linearMap } from "../Lib/Math/functions.js";
 import { Vector2D } from "../Lib/Math/Vector2D.js";
 
 export const TOUCH_EVENT_TYPES = {
@@ -15,9 +16,8 @@ addEventListener("touchend", (event) => {
 });
 // addEventListener("touchcancel")
 addEventListener("touchstart", (event) => {
-    // console.log(event.touches[0].clientX);
-    TOUCH_INFORMATION.position.x = event.touches[0].clientX;
-    TOUCH_INFORMATION.position.y = event.touches[0].clientY;
+    TOUCH_INFORMATION.position.x = event.touches[0].clientX - event.target.offsetLeft;
+    TOUCH_INFORMATION.position.y = event.touches[0].clientY - event.target.offsetTop;
     TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.down;
 });
 // addEventListener("touchmove",(event)=>{
@@ -27,8 +27,8 @@ addEventListener("touchstart", (event) => {
 // });
 
 addEventListener("mousedown", (event) => {
-    TOUCH_INFORMATION.position.x = event.clientX;
-    TOUCH_INFORMATION.position.y = event.clientY;
+    TOUCH_INFORMATION.position.x = event.clientX - event.target.offsetLeft;
+    TOUCH_INFORMATION.position.y = event.clientY - event.target.offsetTop;
     TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.down;
 });
 
@@ -38,3 +38,9 @@ addEventListener("mouseup", (event) => {
 addEventListener("blur", (event) => {
     TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.up;
 });
+
+export function map_coord_to_canvas(touch_position_vector, canvas_element) {
+    let x = linearMap(touch_position_vector.x, 0, canvas_element.clientWidth, 0, canvas_element.width);
+    let y = linearMap(touch_position_vector.y, 0, canvas_element.clientHeight, 0, canvas_element.height);
+    return new Vector2D(x, y);
+}

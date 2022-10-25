@@ -68,18 +68,18 @@ async function preload() {
     sprite = await new Sprite("assets/sprite_sheet/kitty_cannon_dat").load();
     console.log(sprite.name + " loaded...");
     score_board = new ScoreBoard(ctx);
-    
+
     score_board.onContinue = (async function () {
         // console.log("continue logic");
         // reset();
-        should_reset=true;
+        should_reset = true;
     });
     score_board.onMenu = (async function () {
         console.log("Menu");
     })
 
+    resize();
     reset();
-    
     KEYS.r = "r";
     registerKeyEventCallback(KEYS.r, () => { cannon.resetCannon(); }); // temporarry
 
@@ -134,22 +134,38 @@ function gameLoop() {
         score_board.visible = true;
     }
     objectGenerator.update();
-
+    let correct_pos = TouchController.map_coord_to_canvas(TouchController.TOUCH_INFORMATION.position, canvas);
     ctx.beginPath();
-    ctx.arc(TouchController.TOUCH_INFORMATION.position.x, TouchController.TOUCH_INFORMATION.position.y, 10, 0, Math.PI * 2);
+    ctx.arc(correct_pos.x, correct_pos.y, 10, 0, Math.PI * 2);
     ctx.fill();
 
     if (TouchController.TOUCH_INFORMATION.eventType == TouchController.TOUCH_EVENT_TYPES.down) {
-        score_board.updateClickInput(TouchController.TOUCH_INFORMATION.position);
+        score_board.updateClickInput(correct_pos);
     }
     objectGenerator.drawAll();
     cannon.update();
 
     handleKeyboardCallbacks();
 
-    if(should_reset){
+    if (should_reset) {
         reset();
     }
     // setTimeout(gameLoop, 1000 / 60);
     requestAnimationFrame(gameLoop);
 }
+
+function resize() {
+    if (canvas) {
+        let canvas_ar = canvas.width / canvas.height;
+
+        if (canvas_ar * innerHeight < innerWidth) {
+            canvas.style.width = 'auto';
+            canvas.style.height = '100%';
+        } else {
+            canvas.style.width = '100%';
+            canvas.style.height = 'auto';
+        }
+    }
+}
+
+onresize = resize;
