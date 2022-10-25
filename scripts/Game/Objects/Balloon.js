@@ -41,6 +41,11 @@ export default class Balloon {
             this.__animator.proceed();
         }
         if (this.exploded) {
+            let frame = this.__animator.getCurrentFrame();
+            let ar = frame.getWidth() / frame.getHeight();
+            this.height = 100;
+            this.width = this.height * ar;
+    
             this.position.y -= this.vely;
         }
     }

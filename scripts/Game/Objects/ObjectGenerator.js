@@ -31,10 +31,10 @@ export default class ObjectGenerator {
             }
             object.update();
             let hitBox;
-            if(object.getHitBox){
-                hitBox=object.getHitBox();
-            }else{
-                hitBox={ x: 0, y: 0, width: 0, height: 0 };
+            if (object.getHitBox) {
+                hitBox = object.getHitBox();
+            } else {
+                hitBox = { x: 0, y: 0, width: 0, height: 0 };
             }
             if (
                 checkRectRectCollision(
@@ -54,7 +54,7 @@ export default class ObjectGenerator {
                 if (object instanceof Spike) {
                     this.kitty.visible = true;
                     if (this.kitty.position.y < this.kitty.groundLevel) {
-                        this.kitty.position.y += 1;
+                        this.kitty.position.y += 0.5;
                     }
                 }
 
@@ -83,9 +83,9 @@ export default class ObjectGenerator {
                 if (object instanceof Bomb) {
                     this.kitty.isDead = false;
                     this.kitty.visible = true;
-                    this.kitty.velocity.add(new Vector2D(50, 100));
+                    this.kitty.velocity.add(new Vector2D(50, -100));
                     this.kitty.update();
-                    this.objects.push(new Blast(this.__ctx, this.__sprite_sheet, new Vector2D(hitBox.x,hitBox.y)));
+                    this.objects.push(new Blast(this.__ctx, this.__sprite_sheet, new Vector2D(hitBox.x, hitBox.y)));
                 }
 
                 if ((object instanceof Balloon)) {
@@ -93,9 +93,9 @@ export default class ObjectGenerator {
                     this.kitty.visible = true;
                     if (!object.exploded) {
                         this.kitty.update();
-                        this.kitty.velocity.add(new Vector2D(35, 100));
+                        this.kitty.velocity.add(new Vector2D(35, -100));
                     }
-                    this.objects.push(new Blast(this.__ctx, this.__sprite_sheet, new Vector2D(hitBox.x,hitBox.y)));
+                    this.objects.push(new Blast(this.__ctx, this.__sprite_sheet, new Vector2D(hitBox.x, hitBox.y)));
                 }
             }
 

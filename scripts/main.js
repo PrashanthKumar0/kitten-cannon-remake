@@ -11,6 +11,7 @@ import ObjectGenerator from "./Game/Objects/ObjectGenerator.js";
 import ScoreBoard from "./Game/Objects/ScoreBoard.js";
 import * as TouchController from "./Game/TouchController.js";
 import RoundButton from "./Game/UI/RoundButton.js";
+import HeightDisplay from "./Game/Objects/HeightDisplay.js";
 
 //  production 
 // console.log=()=>{};
@@ -48,6 +49,8 @@ let should_reset = false;
 let fire_button;
 let up_button;
 let down_button;
+let height_display;
+const pixel_per_feet = 400;
 
 function reset() {
     should_reset = false;
@@ -59,12 +62,11 @@ function reset() {
     fire_button = new RoundButton(ctx, "🔥", new Vector2D(canvas.width - 200, canvas.height - 200), 34, "white", "black", "Test");
     up_button = new RoundButton(ctx, "👆", new Vector2D(canvas.width - 100, canvas.height - 250), 34, "white", "black", "Test");
     down_button = new RoundButton(ctx, "👇", new Vector2D(canvas.width - 100, canvas.height - 150), 34, "white", "black", "Test");
-
+    height_display = new HeightDisplay(ctx, pixel_per_feet,"Test");
 
 
     fire_button.onClick = (function () {
         throw_kitty();
-        fire_button.visible = false;
     });
     up_button.onClick = (function () {
         cannon.barrelUp();
@@ -77,6 +79,12 @@ function reset() {
     // score reset
     distance_travelled_px = 0;
     highest_distance_travelled_px = 0;
+}
+
+function hide_buttons() {
+    fire_button.visible = false;
+    up_button.visible = false;
+    down_button.visible = false;
 }
 
 function handle_highScore() {
@@ -96,6 +104,7 @@ function throw_kitty() {
             .subtract(new Vector2D(kitty.width / 2, kitty.height / 2));
         kitty.throw(barrelDir.scale((cannon.powerPercent / 100) * 80));
     }
+    hide_buttons();
 }
 
 async function preload() {
@@ -130,7 +139,6 @@ async function preload() {
 
 let bg = new Image();
 bg.src = "ref_images/game_over.png";
-const pixel_per_feet = 400;
 
 // 200 px = 1 meter
 function gameLoop() {
@@ -178,7 +186,8 @@ function gameLoop() {
     fire_button.draw();
     up_button.draw();
     down_button.draw();
-
+    height_display.draw();
+    height_display.updateWithKittenPosition(kitty.position);
 
     handleKeyboardCallbacks();
 
@@ -195,9 +204,9 @@ function resize() {
 
         if (canvas_ar * innerHeight < innerWidth) {
             canvas.style.width = 'auto';
-            canvas.style.height = '100%';
+            canvas.style.height = '100vh';
         } else {
-            canvas.style.width = '100%';
+            canvas.style.width = '100vw';
             canvas.style.height = 'auto';
         }
     }
