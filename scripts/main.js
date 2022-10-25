@@ -10,6 +10,7 @@ import Kitten from "./Game/Objects/Kitten.js";
 import ObjectGenerator from "./Game/Objects/ObjectGenerator.js";
 import ScoreBoard from "./Game/Objects/ScoreBoard.js";
 import * as TouchController from "./Game/TouchController.js";
+import RoundButton from "./Game/UI/RoundButton.js";
 
 //  production 
 // console.log=()=>{};
@@ -44,6 +45,10 @@ let score_board;
 let distance_travelled_px = 0;
 let highest_distance_travelled_px = 0;
 let should_reset = false;
+let fire_button;
+let up_button;
+let down_button;
+
 function reset() {
     should_reset = false;
     score_board.visible = false;
@@ -51,6 +56,23 @@ function reset() {
     cannon = new Cannon(ctx, sprite);
     kitty = new Kitten(ctx, sprite);
     objectGenerator = new ObjectGenerator(ctx, sprite, kitty, OBJECT_GAP);
+    fire_button = new RoundButton(ctx, "🔥", new Vector2D(canvas.width - 200, canvas.height - 200), 34, "white", "black", "Test");
+    up_button = new RoundButton(ctx, "👆", new Vector2D(canvas.width - 100, canvas.height - 250), 34, "white", "black", "Test");
+    down_button = new RoundButton(ctx, "👇", new Vector2D(canvas.width - 100, canvas.height - 150), 34, "white", "black", "Test");
+
+
+
+    fire_button.onClick = (function () {
+        throw_kitty();
+        fire_button.visible = false;
+    });
+    up_button.onClick = (function () {
+        cannon.barrelUp();
+    });
+    down_button.onClick = (function () {
+        cannon.barrelDown();
+    });
+
     ground_ref = canvas.height - 60;
     // score reset
     distance_travelled_px = 0;
@@ -60,6 +82,19 @@ function reset() {
 function handle_highScore() {
     if (distance_travelled_px > highest_distance_travelled_px) {
         highest_distance_travelled_px = distance_travelled_px;
+    }
+}
+
+
+function throw_kitty() {
+    if (!kitty.visible && !kitty.isDead) {
+        cannon.barrelShoot();
+        let barrelDir = cannon.getBarrelDirectionVector();
+        kitty.visible = true;
+        kitty.position = cannon.getBarrelEnd()
+            .subtract(barrelDir.copy().scale(32))
+            .subtract(new Vector2D(kitty.width / 2, kitty.height / 2));
+        kitty.throw(barrelDir.scale((cannon.powerPercent / 100) * 80));
     }
 }
 
@@ -76,7 +111,7 @@ async function preload() {
     });
     score_board.onMenu = (async function () {
         console.log("Menu");
-    })
+    });
 
     resize();
     reset();
@@ -88,15 +123,7 @@ async function preload() {
     registerKeyEventCallback(KEYS.s, () => { cannon.barrelDown(); });
     registerKeyEventCallback(KEYS.arrowdown, () => { cannon.barrelDown(); });
     registerKeyEventCallback(KEYS.space, () => {
-        if (!kitty.visible && !kitty.isDead) {
-            cannon.barrelShoot();
-            let barrelDir = cannon.getBarrelDirectionVector();
-            kitty.visible = true;
-            kitty.position = cannon.getBarrelEnd()
-                .subtract(barrelDir.copy().scale(32))
-                .subtract(new Vector2D(kitty.width / 2, kitty.height / 2));
-            kitty.throw(barrelDir.scale((cannon.powerPercent / 100) * 80));
-        }
+        throw_kitty();
     });
 }
 
@@ -141,9 +168,17 @@ function gameLoop() {
 
     if (TouchController.TOUCH_INFORMATION.eventType == TouchController.TOUCH_EVENT_TYPES.down) {
         score_board.updateClickInput(correct_pos);
+        fire_button.updateClickInput(correct_pos);
+        up_button.updateClickInput(correct_pos);
+        down_button.updateClickInput(correct_pos);
     }
     objectGenerator.drawAll();
     cannon.update();
+
+    fire_button.draw();
+    up_button.draw();
+    down_button.draw();
+
 
     handleKeyboardCallbacks();
 

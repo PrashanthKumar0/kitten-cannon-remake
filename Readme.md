@@ -15,3 +15,4 @@ TODO : (Lots of things actually).
 - [ ] correct Bomb class sprite sheet 
 - [ ] make UI interactive (endgame) 
 - [ ] make game menu
+- [ ] better barrel up/down touch input.
