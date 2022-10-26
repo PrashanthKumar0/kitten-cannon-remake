@@ -3,6 +3,15 @@
     src: url("../assets/fonts/289_Nicotine\ Stains.woff2"), url("../assets/fonts/289_Nicotine\ Stains.woff");
 }
 
+@font-face {
+    font-family: "Test1";
+    /* src: url("../assets/fonts/292_Soopafresh.eot"), url("../assets/fonts/292_Soopafresh.woff"), url("../assets/fonts/292_Soopafresh.woff2"); */
+    src:
+        url("../assets/fonts/392_Tahoma.eot"),
+        url("../assets/fonts/392_Tahoma.woff"),
+        url("../assets/fonts/392_Tahoma.woff2");
+}
+
 body {
     margin: 0px;
     display: flex;

@@ -1,0 +1,36 @@
+{"frames": {
+
+"credits_screen.png":
+{
+	"frame": {"x":0,"y":0,"w":1130,"h":695},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1130,"h":695},
+	"sourceSize": {"w":1130,"h":695}
+},
+"how_to_play_screen.png":
+{
+	"frame": {"x":0,"y":695,"w":1000,"h":615},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":1000,"h":615},
+	"sourceSize": {"w":1000,"h":615}
+},
+"menu_screen.png":
+{
+	"frame": {"x":1000,"y":695,"w":829,"h":510},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":829,"h":510},
+	"sourceSize": {"w":829,"h":510}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "game_screens_dat.png",
+	"format": "RGBA8888",
+	"size": {"w":1829,"h":1310},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:7a2077ff41834697e676f1f51ce072fc:e8cc53ac43ae9bf97ed3b1e50f152972:557fe47d84c696272580536cfe02c61e$"
+}
+}

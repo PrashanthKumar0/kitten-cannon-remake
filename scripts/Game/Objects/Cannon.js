@@ -250,10 +250,10 @@ export default class Cannon {
             this.update_powerPercentage();
         }
     }
-    resetCannon() {
-        this.isShooting = false;
-        this.__animations.barrel_shoot.animator.reset();
-    }
+    // resetCannon() {
+    //     this.isShooting = false;
+    //     this.__animations.barrel_shoot.animator.reset();
+    // }
     update_powerPercentage() {
         this.powerPercent += this.powerVelocity;
         if (this.powerPercent >= 100) {

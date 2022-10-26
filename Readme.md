@@ -16,3 +16,4 @@ TODO : (Lots of things actually).
 - [ ] make UI interactive (endgame) 
 - [ ] make game menu
 - [ ] better barrel up/down touch input.
+- [ ] add screen.js to inherit from.

@@ -12,6 +12,10 @@ import ScoreBoard from "./Game/Objects/ScoreBoard.js";
 import * as TouchController from "./Game/TouchController.js";
 import RoundButton from "./Game/UI/RoundButton.js";
 import HeightDisplay from "./Game/Objects/HeightDisplay.js";
+import MenuScreen from "./Game/UI/Screens/MenuScreen.js";
+import HowToPlayScreen from "./Game/UI/Screens/HowToPlayScreen.js";
+import { linearMap } from "./Lib/Math/functions.js";
+import Creditscreen from "./Game/UI/Screens/CreditsScreen.js";
 
 //  production 
 // console.log=()=>{};
@@ -37,6 +41,7 @@ function setup() {
 }
 
 let sprite;
+let screens_sprite;
 let grass, cannon;
 let ground_ref;
 let kitty;
@@ -50,7 +55,22 @@ let fire_button;
 let up_button;
 let down_button;
 let height_display;
+// 400 px = 1 meter
 const pixel_per_feet = 400;
+let skip_frames = 0;
+let max_skip_frames = 0;
+let menu_screen;
+let how_to_play_screen;
+let credits_screen;
+
+const GAME_SCREENS_E = {
+    "Menu": 0b1,
+    "Play": 0b1 << 1,
+    "Help": 0b1 << 2,
+    "Credits": 0b1 << 3,
+};
+let CURRENT_GAME_SCREEN = GAME_SCREENS_E.Menu;
+
 
 function reset_game() {
     should_reset = false;
@@ -62,28 +82,106 @@ function reset_game() {
     fire_button = new RoundButton(ctx, "🔥", new Vector2D(canvas.width - 200, canvas.height - 200), 34, "white", "black", "Test");
     up_button = new RoundButton(ctx, "👆", new Vector2D(canvas.width - 100, canvas.height - 250), 34, "white", "black", "Test");
     down_button = new RoundButton(ctx, "👇", new Vector2D(canvas.width - 100, canvas.height - 150), 34, "white", "black", "Test");
-    height_display = new HeightDisplay(ctx, pixel_per_feet,"Test");
+    height_display = new HeightDisplay(ctx, pixel_per_feet, "Test");
 
-
-    fire_button.onClick = (function () {
-        throw_kitty();
-    });
-    up_button.onClick = (function () {
-        cannon.barrelUp();
-    });
-    down_button.onClick = (function () {
-        cannon.barrelDown();
-    });
 
     ground_ref = canvas.height - 60;
     // score reset
     distance_travelled_px = 0;
+    add_button_events();
 }
 
 function hide_buttons() {
     fire_button.visible = false;
     up_button.visible = false;
     down_button.visible = false;
+}
+
+
+function add_button_events() {
+
+    fire_button.onClick = (function () {
+        console.log("kitty throw");
+        throw_kitty();
+    });
+    up_button.onClick = (function () {
+        console.log("barrel Up");
+        cannon.barrelUp();
+    });
+    down_button.onClick = (function () {
+        console.log("barrel Down");
+        cannon.barrelDown();
+    });
+
+
+
+    // score board
+    score_board.onContinue = (async function () {
+        // reset_game();
+        console.log("reset");
+        should_reset = true;
+    });
+    score_board.onMenu = (async function () {
+        console.log("Menu");
+        CURRENT_GAME_SCREEN = GAME_SCREENS_E.Menu;
+        max_skip_frames = skip_frames = 60;
+    });
+
+
+    menu_screen.onStartClick = function () {
+        console.log("Start");
+        CURRENT_GAME_SCREEN = GAME_SCREENS_E.Play;
+        max_skip_frames = skip_frames = 60;
+    }
+    menu_screen.onHelpClick = function () {
+        console.log("How To Play");
+        CURRENT_GAME_SCREEN = GAME_SCREENS_E.Help;
+        max_skip_frames = skip_frames = 60;
+    }
+
+    menu_screen.onCreditsClick = function () {
+        console.log("How To Play");
+        CURRENT_GAME_SCREEN = GAME_SCREENS_E.Credits;
+        max_skip_frames = skip_frames = 60;
+    }
+
+    how_to_play_screen.onBackClick = function () {
+        console.log("Back");
+        CURRENT_GAME_SCREEN = GAME_SCREENS_E.Menu;
+        max_skip_frames = skip_frames = 60;
+    }
+
+    credits_screen.onBackClick = function () {
+        console.log("Back");
+        CURRENT_GAME_SCREEN = GAME_SCREENS_E.Menu;
+        max_skip_frames = skip_frames = 60;
+    }
+
+    // keyboard
+    // KEYS.r = "r";
+    // registerKeyEventCallback(KEYS.r, () => { cannon.resetCannon(); }); // temporarry
+
+    registerKeyEventCallback(KEYS.w, () => {
+        console.log("BarrelUp");
+        cannon.barrelUp();
+    });
+    registerKeyEventCallback(KEYS.arrowup, () => {
+        console.log("BarrelUp");
+        cannon.barrelUp();
+    });
+    registerKeyEventCallback(KEYS.s, () => {
+        console.log("BarrelDown");
+        cannon.barrelDown();
+    });
+    registerKeyEventCallback(KEYS.arrowdown, () => {
+        console.log("BarrelDown");
+        cannon.barrelDown();
+    });
+    registerKeyEventCallback(KEYS.space, () => {
+        console.log("kitty throw");
+        throw_kitty();
+    });
+
 }
 
 function handle_highScore() {
@@ -108,53 +206,95 @@ function throw_kitty() {
 
 async function preload() {
     console.log("start loading");
+
+    // TODO : use promises
     sprite = await new Sprite("assets/sprite_sheet/kitty_cannon_dat").load();
     console.log(sprite.name + " loaded...");
+    screens_sprite = await new Sprite("assets/sprite_sheet/game_screens_dat").load();
+    console.log(screens_sprite.name + " loaded...");
     score_board = new ScoreBoard(ctx);
 
-    score_board.onContinue = (async function () {
-        // console.log("continue logic");
-        // reset_game();
-        should_reset = true;
-    });
-    score_board.onMenu = (async function () {
-        console.log("Menu");
-    });
-    
-
+    menu_screen = new MenuScreen(ctx, screens_sprite, "Test");
+    how_to_play_screen = new HowToPlayScreen(ctx, screens_sprite, "Test");
+    credits_screen = new Creditscreen(ctx, screens_sprite, "Test");
+    // CURRENT_GAME_SCREEN = GAME_SCREENS_E.Play;
     highest_distance_travelled_px = 0; // todo : move this line in restart_game(); later
     resize();
     reset_game();
-    KEYS.r = "r";
-    registerKeyEventCallback(KEYS.r, () => { cannon.resetCannon(); }); // temporarry
-
-    registerKeyEventCallback(KEYS.w, () => { cannon.barrelUp(); });
-    registerKeyEventCallback(KEYS.arrowup, () => { cannon.barrelUp(); });
-    registerKeyEventCallback(KEYS.s, () => { cannon.barrelDown(); });
-    registerKeyEventCallback(KEYS.arrowdown, () => { cannon.barrelDown(); });
-    registerKeyEventCallback(KEYS.space, () => {
-        throw_kitty();
-    });
 }
 
 
 let bg = new Image();
-bg.src = "ref_images/game_over.png";
+bg.src = "ref_images/menu_screen.png";
 
-// 200 px = 1 meter
 function gameLoop() {
+    requestAnimationFrame(gameLoop);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // ctx.drawImage(bg, 0, 0);
-    // this will be in kitty.getScore();
-    render_game_screen();
+
+    if (skip_frames > 0) {
+        skip_frames--;
+        show_load_screen(skip_frames, max_skip_frames);
+        return;
+    }
+    max_skip_frames = 0;
+    skip_frames = 0;
+
+    switch (CURRENT_GAME_SCREEN) {
+        case GAME_SCREENS_E.Menu:
+            render_screen(menu_screen);
+            break;
+        case GAME_SCREENS_E.Credits:
+            render_screen(credits_screen);
+            break;
+        case GAME_SCREENS_E.Help:
+            render_screen(how_to_play_screen);
+            break;
+        case GAME_SCREENS_E.Play:
+            render_game_screen();
+            break;
+    }
     // setTimeout(gameLoop, 1000 / 60);
-    requestAnimationFrame(gameLoop);
 }
 
 // screens
+function render_screen(screen_class) {
+    // ctx.drawImage(bg, canvas.width/2 - bg.width/2, 0);
+    // ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+    // ctx.strokeRect(0, 0, canvas.width, canvas.height);
+    // ctx.fillStyle="red";
+    // ctx.font="50px Test1";
+    // // ctx.fillText("kitten  cannon  is  very  simple",100,400);    
+    screen_class.draw();
+    if (TouchController.TOUCH_INFORMATION.eventType == TouchController.TOUCH_EVENT_TYPES.down) {
+        let correct_pos = TouchController.map_coord_to_canvas(TouchController.TOUCH_INFORMATION.position, canvas);
+        screen_class.updateClickInput(correct_pos);
+    }
+}
 
-function render_game_screen(){
+function show_load_screen(progress, max_progress) {
+    ctx.fillStyle = "#dbedff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    let frame = screens_sprite.getFrame("menu_screen.png");
+    let frame_w = frame.getWidth();
+    let frame_h = frame.getHeight();
+    frame.draw(ctx, canvas.width / 2 - frame_w / 2, 0, frame_w, frame_h);
+    let w = Math.floor(linearMap(progress, 0, max_progress, 0, canvas.width / 2));
+    ctx.lineWidth = 2;
+    ctx.fillStyle = "forestgreen";
+    ctx.fillRect(canvas.width / 4 + 4, canvas.height / 2 + 4, w, 40);
+    ctx.fillStyle = "lightgreen";
+    ctx.fillRect(canvas.width / 4, canvas.height / 2, w, 40);
+    ctx.fillStyle = "forestgreen";
+    ctx.strokeRect(canvas.width / 4, canvas.height / 2, w, 40);
+    ctx.font = "60px Test";
+    let text = "Loading ...";
+    let font_w_half = ctx.measureText(text).width / 2;
+    ctx.fillText(text, canvas.width / 2 - font_w_half, canvas.height / 2 + 100);
+}
+
+function render_game_screen() {
+    // this will be in kitty.getScore();
     let distance_travelled = (distance_travelled_px / pixel_per_feet).toFixed(0);
     let highest_distance_travelled = (highest_distance_travelled_px / pixel_per_feet).toFixed(0);
 
@@ -205,7 +345,6 @@ function render_game_screen(){
     }
 
 }
-
 
 
 
