@@ -157,31 +157,6 @@ function add_button_events() {
         max_skip_frames = skip_frames = 60;
     }
 
-    // keyboard
-    // KEYS.r = "r";
-    // registerKeyEventCallback(KEYS.r, () => { cannon.resetCannon(); }); // temporarry
-
-    registerKeyEventCallback(KEYS.w, () => {
-        console.log("BarrelUp");
-        cannon.barrelUp();
-    });
-    registerKeyEventCallback(KEYS.arrowup, () => {
-        console.log("BarrelUp");
-        cannon.barrelUp();
-    });
-    registerKeyEventCallback(KEYS.s, () => {
-        console.log("BarrelDown");
-        cannon.barrelDown();
-    });
-    registerKeyEventCallback(KEYS.arrowdown, () => {
-        console.log("BarrelDown");
-        cannon.barrelDown();
-    });
-    registerKeyEventCallback(KEYS.space, () => {
-        console.log("kitty throw");
-        throw_kitty();
-    });
-
 }
 
 function handle_highScore() {
@@ -221,8 +196,36 @@ async function preload() {
     highest_distance_travelled_px = 0; // todo : move this line in restart_game(); later
     resize();
     reset_game();
+
+    set_events();
 }
 
+function set_events() {
+    // keyboard
+    // KEYS.r = "r";
+    // registerKeyEventCallback(KEYS.r, () => { cannon.resetCannon(); }); // temporarry
+
+    registerKeyEventCallback(KEYS.w, () => {
+        console.log("BarrelUp");
+        cannon.barrelUp();
+    });
+    registerKeyEventCallback(KEYS.arrowup, () => {
+        console.log("BarrelUp");
+        cannon.barrelUp();
+    });
+    registerKeyEventCallback(KEYS.s, () => {
+        console.log("BarrelDown");
+        cannon.barrelDown();
+    });
+    registerKeyEventCallback(KEYS.arrowdown, () => {
+        console.log("BarrelDown");
+        cannon.barrelDown();
+    });
+    registerKeyEventCallback(KEYS.space, () => {
+        console.log("kitty throw");
+        throw_kitty();
+    });
+}
 
 let bg = new Image();
 bg.src = "ref_images/menu_screen.png";
