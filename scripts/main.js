@@ -52,7 +52,7 @@ let down_button;
 let height_display;
 const pixel_per_feet = 400;
 
-function reset() {
+function reset_game() {
     should_reset = false;
     score_board.visible = false;
     grass = new Grass(ctx, sprite);
@@ -78,7 +78,6 @@ function reset() {
     ground_ref = canvas.height - 60;
     // score reset
     distance_travelled_px = 0;
-    highest_distance_travelled_px = 0;
 }
 
 function hide_buttons() {
@@ -115,15 +114,17 @@ async function preload() {
 
     score_board.onContinue = (async function () {
         // console.log("continue logic");
-        // reset();
+        // reset_game();
         should_reset = true;
     });
     score_board.onMenu = (async function () {
         console.log("Menu");
     });
+    
 
+    highest_distance_travelled_px = 0; // todo : move this line in restart_game(); later
     resize();
-    reset();
+    reset_game();
     KEYS.r = "r";
     registerKeyEventCallback(KEYS.r, () => { cannon.resetCannon(); }); // temporarry
 
@@ -146,6 +147,14 @@ function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // ctx.drawImage(bg, 0, 0);
     // this will be in kitty.getScore();
+    render_game_screen();
+    // setTimeout(gameLoop, 1000 / 60);
+    requestAnimationFrame(gameLoop);
+}
+
+// screens
+
+function render_game_screen(){
     let distance_travelled = (distance_travelled_px / pixel_per_feet).toFixed(0);
     let highest_distance_travelled = (highest_distance_travelled_px / pixel_per_feet).toFixed(0);
 
@@ -192,11 +201,15 @@ function gameLoop() {
     handleKeyboardCallbacks();
 
     if (should_reset) {
-        reset();
+        reset_game();
     }
-    // setTimeout(gameLoop, 1000 / 60);
-    requestAnimationFrame(gameLoop);
+
 }
+
+
+
+
+// utils
 
 function resize() {
     if (canvas) {
