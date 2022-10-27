@@ -421,6 +421,24 @@ function render_game_screen() {
 
 }
 
+function preload_screen() {
+    ctx.fillStyle = "#dbedff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    let frame = screens_sprite.getFrame("menu_screen.png");
+    frame.draw(ctx, 0, 0, canvas.width, canvas.height);
+
+    // let arc_r = 40;
+    // let arc_pos = new Vector2D();
+    // if (TouchController.TOUCH_EVENT_TYPES.down == TouchController.TOUCH_INFORMATION.eventType) {
+    //     let touch_pos = TouchController.TOUCH_INFORMATION.position.copy();
+
+    // }
+}
+
+function splash_screen() {
+
+}
+
 
 // utils
 
