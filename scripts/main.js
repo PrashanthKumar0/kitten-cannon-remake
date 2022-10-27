@@ -16,6 +16,7 @@ import MenuScreen from "./Game/UI/Screens/MenuScreen.js";
 import HowToPlayScreen from "./Game/UI/Screens/HowToPlayScreen.js";
 import { linearMap } from "./Lib/Math/functions.js";
 import Creditscreen from "./Game/UI/Screens/CreditsScreen.js";
+import Timer from "./Game/Timer.js";
 
 //  production 
 // console.log=()=>{};
@@ -63,6 +64,8 @@ let menu_screen;
 let how_to_play_screen;
 let credits_screen;
 
+let timer;
+
 const GAME_SCREENS_E = {
     "Menu": 0b1,
     "Play": 0b1 << 1,
@@ -83,12 +86,13 @@ function reset_game() {
     up_button = new RoundButton(ctx, "👆", new Vector2D(canvas.width - 100, canvas.height - 250), 34, "white", "black", "Test");
     down_button = new RoundButton(ctx, "👇", new Vector2D(canvas.width - 100, canvas.height - 150), 34, "white", "black", "Test");
     height_display = new HeightDisplay(ctx, pixel_per_feet, "Test");
-
+    timer = new Timer();
 
     ground_ref = canvas.height - 60;
     // score reset
     distance_travelled_px = 0;
     add_button_events();
+    timer.getTickS();
 }
 
 function hide_buttons() {
@@ -296,7 +300,24 @@ function show_load_screen(progress, max_progress) {
     ctx.fillText(text, canvas.width / 2 - font_w_half, canvas.height / 2 + 100);
 }
 
+let targetFps = 60;
+
 function render_game_screen() {
+    let dt = timer.getTickS();
+    let fps = (1 / dt);
+    ctx.font = "50px Test";
+    ctx.fillStyle = "#000";
+    ctx.fillText("original FPS : " + fps.toFixed(0), 30, 30);
+    { // delay to match fps <= targetFps
+        let l_timer=new Timer();
+        let fps_l = fps;
+        let dt_accum = dt;
+        while (fps_l >= targetFps) {
+            dt_accum += l_timer.getTickS();
+            fps_l = (1 / dt_accum);
+        }
+        ctx.fillText("apparent FPS : " + fps_l.toFixed(0), 30, 90);
+    }
     // this will be in kitty.getScore();
     let distance_travelled = (distance_travelled_px / pixel_per_feet).toFixed(0);
     let highest_distance_travelled = (highest_distance_travelled_px / pixel_per_feet).toFixed(0);
@@ -323,7 +344,7 @@ function render_game_screen() {
     objectGenerator.update();
     let correct_pos = TouchController.map_coord_to_canvas(TouchController.TOUCH_INFORMATION.position, canvas);
     ctx.beginPath();
-    ctx.arc(correct_pos.x, correct_pos.y, 10, 0, Math.PI * 2);
+    ctx.arc(correct_pos.x, correct_pos.y, 4, 0, Math.PI * 2);
     ctx.fill();
 
     if (TouchController.TOUCH_INFORMATION.eventType == TouchController.TOUCH_EVENT_TYPES.down) {

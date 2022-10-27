@@ -56,7 +56,7 @@ export default class Kitten {
             console.log("dead");
             return;
         }
-        this.position.add(this.velocity).y;
+        this.position.add(this.velocity);
         if (this.position.x >= this.virtualPosXMax) {
             this.position.x = this.virtualPosXMax;
         }
