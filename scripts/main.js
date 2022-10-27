@@ -17,6 +17,7 @@ import HowToPlayScreen from "./Game/UI/Screens/HowToPlayScreen.js";
 import { linearMap } from "./Lib/Math/functions.js";
 import Creditscreen from "./Game/UI/Screens/CreditsScreen.js";
 import Timer from "./Game/Timer.js";
+import SoundManager from "./Game/SoundManager.js";
 
 //  production 
 // console.log=()=>{};
@@ -66,13 +67,17 @@ let credits_screen;
 
 let timer;
 
+let sound_manager;
+
 const GAME_SCREENS_E = {
-    "Menu": 0b1,
-    "Play": 0b1 << 1,
-    "Help": 0b1 << 2,
-    "Credits": 0b1 << 3,
+    "Preload": 0b1,
+    "Splash": 0b1 << 1,
+    "Menu": 0b1 << 2,
+    "Play": 0b1 << 3,
+    "Help": 0b1 << 4,
+    "Credits": 0b1 << 5,
 };
-let CURRENT_GAME_SCREEN = GAME_SCREENS_E.Menu;
+let CURRENT_GAME_SCREEN = GAME_SCREENS_E.Preload;
 
 
 function reset_game() {
@@ -198,10 +203,50 @@ async function preload() {
     credits_screen = new Creditscreen(ctx, screens_sprite, "Test");
     // CURRENT_GAME_SCREEN = GAME_SCREENS_E.Play;
     highest_distance_travelled_px = 0; // todo : move this line in restart_game(); later
+    sound_manager = new SoundManager();
+    add_sounds();
+
     resize();
     reset_game();
 
     set_events();
+}
+
+function add_sounds() {
+    sound_manager
+        .addSound("woosh", "assets/audio_fx/1_whooshrev.m4a", 1.0)
+        .addSound("after_load", "assets/audio_fx/2.m4a", 1.0)
+
+        .addSound("hit1", "assets/audio_fx/5_hit1.m4a", 1.0)
+        .addSound("hit2", "assets/audio_fx/4_hit2.m4a", 1.0)
+        .addSound("hit3", "assets/audio_fx/3_hit3.m4a", 1.0)
+        .addSound("hit4", "assets/audio_fx/2_hit4.m4a", 1.0)
+
+
+        .addSound("cat1", "../assets/audio_fx/12_cat1.m4a", 1.0)
+        .addSound("cat2", "../assets/audio_fx/11_cat2.m4a", 1.0)
+        .addSound("cat3", "../assets/audio_fx/10_cat3.m4a", 1.0)
+        .addSound("cat4", "../assets/audio_fx/9_cat4.m4a", 1.0)
+        .addSound("cat5", "../assets/audio_fx/8_cat5.m4a", 1.0)
+        .addSound("cat6", "../assets/audio_fx/7_cat6.m4a", 1.0)
+
+        .addSound("tnt_blast", "../assets/audio_fx/191.m4a", 1.0)
+        .addSound("spike", "../assets/audio_fx/203.m4a", 1.0)
+        .addSound("swallow", "../assets/audio_fx/222.m4a", 1.0)
+        .addSound("trampoline", "../assets/audio_fx/245.m4a", 1.0)
+        .addSound("barrel", "../assets/audio_fx/375.m4a", 1.0)
+        .addSound("baloon_blast", "../assets/audio_fx/378.m4a", 1.0)
+        // .addSound("woosh", "../assets/audio_fx/311.m4a",1.0)
+        // .addSound("woosh", "../assets/audio_fx/6_failure.m4a",1.0)
+
+
+        .loadAll()
+        .onLoad = function (sound_name, progress_percentage) {
+            console.log("loaded sound " + sound_name, progress_percentage + " %", progress_percentage == 100 ? "{done}" : "")
+            if (progress_percentage == 100) sound_manager.play("after_load").onended = function () {
+
+            };
+        }
 }
 
 function set_events() {
@@ -248,6 +293,12 @@ function gameLoop() {
     skip_frames = 0;
 
     switch (CURRENT_GAME_SCREEN) {
+        case GAME_SCREENS_E.Preload:
+            preload_screen();
+            break;
+        case GAME_SCREENS_E.Splash:
+            splash_screen();
+            break;
         case GAME_SCREENS_E.Menu:
             render_screen(menu_screen);
             break;
@@ -309,7 +360,7 @@ function render_game_screen() {
     ctx.fillStyle = "#000";
     ctx.fillText("original FPS : " + fps.toFixed(0), 30, 30);
     { // delay to match fps <= targetFps
-        let l_timer=new Timer();
+        let l_timer = new Timer();
         let fps_l = fps;
         let dt_accum = dt;
         while (fps_l >= targetFps) {
@@ -369,7 +420,6 @@ function render_game_screen() {
     }
 
 }
-
 
 
 // utils
