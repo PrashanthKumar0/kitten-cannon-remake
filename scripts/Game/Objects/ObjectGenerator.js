@@ -8,7 +8,7 @@ import Trampoline from "./Trampoline.js";
 import Venus from "./Venus.js";
 
 export default class ObjectGenerator {
-    constructor(canvas2D_context, sprite_sheet, kitty, gap_inbetween) {
+    constructor(canvas2D_context, sprite_sheet, kitty, gap_inbetween, sound_manager) {
         this.__ctx = canvas2D_context;
         this.__sprite_sheet = sprite_sheet;
         this.gap_inbetween = gap_inbetween;

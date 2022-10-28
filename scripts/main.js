@@ -84,9 +84,9 @@ function reset_game() {
     should_reset = false;
     score_board.visible = false;
     grass = new Grass(ctx, sprite);
-    cannon = new Cannon(ctx, sprite);
-    kitty = new Kitten(ctx, sprite);
-    objectGenerator = new ObjectGenerator(ctx, sprite, kitty, OBJECT_GAP);
+    cannon = new Cannon(ctx, sprite , sound_manager);
+    kitty = new Kitten(ctx, sprite , sound_manager);
+    objectGenerator = new ObjectGenerator(ctx, sprite, kitty, OBJECT_GAP, sound_manager);
     fire_button = new RoundButton(ctx, "🔥", new Vector2D(canvas.width - 200, canvas.height - 200), 34, "white", "black", "Test");
     up_button = new RoundButton(ctx, "👆", new Vector2D(canvas.width - 100, canvas.height - 250), 34, "white", "black", "Test");
     down_button = new RoundButton(ctx, "👇", new Vector2D(canvas.width - 100, canvas.height - 150), 34, "white", "black", "Test");
@@ -243,9 +243,6 @@ function add_sounds() {
         .loadAll()
         .onLoad = function (sound_name, progress_percentage) {
             console.log("loaded sound " + sound_name, progress_percentage + " %", progress_percentage == 100 ? "{done}" : "")
-            if (progress_percentage == 100) sound_manager.play("after_load").onended = function () {
-
-            };
         }
 }
 
@@ -427,16 +424,68 @@ function preload_screen() {
     let frame = screens_sprite.getFrame("menu_screen.png");
     frame.draw(ctx, 0, 0, canvas.width, canvas.height);
 
-    // let arc_r = 40;
-    // let arc_pos = new Vector2D();
-    // if (TouchController.TOUCH_EVENT_TYPES.down == TouchController.TOUCH_INFORMATION.eventType) {
-    //     let touch_pos = TouchController.TOUCH_INFORMATION.position.copy();
 
-    // }
+    let arc_r = 80;
+    let arc_pos = new Vector2D(canvas.width / 2, canvas.height - arc_r - 80);
+
+    if (sound_manager.loaded) { // play button
+
+
+        //play button background circle
+        ctx.fillStyle = "#000";
+        ctx.beginPath();
+        ctx.arc(arc_pos.x, arc_pos.y, arc_r, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+
+        //play button circle outline
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#FFF";
+        ctx.beginPath();
+        ctx.arc(arc_pos.x, arc_pos.y, arc_r - 4, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.stroke();
+
+        // play Triangle
+
+        ctx.fillStyle = "#FFF";
+        ctx.save();
+
+        let new_r = arc_r - 24;
+        let eq_tri_vec = new Vector2D(-1, Math.sqrt(3)).scale((1 / 2) * (new_r));
+        ctx.beginPath();
+        ctx.translate(arc_pos.x, arc_pos.y);
+        ctx.moveTo(new_r, 0);
+        ctx.lineTo(eq_tri_vec.x, eq_tri_vec.y);
+        ctx.lineTo(eq_tri_vec.x, -eq_tri_vec.y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+
+        if (TouchController.TOUCH_EVENT_TYPES.down == TouchController.TOUCH_INFORMATION.eventType) {
+            let touch_pos = TouchController.TOUCH_INFORMATION.position.copy();
+            if (touch_pos.subtract(arc_pos).magSq() <= arc_r * arc_r);
+            CURRENT_GAME_SCREEN = GAME_SCREENS_E.Splash;
+            sound_manager.play("after_load").onended = function () {
+                CURRENT_GAME_SCREEN = GAME_SCREENS_E.Menu;
+                cannon.resetBarrel();
+            }
+        }
+
+    }
+
 }
 
 function splash_screen() {
-
+    grass.draw();
+    cannon.draw();
+    cannon.update();
+    if( sound_manager.getAudio("after_load").currentTime > 4.1){
+        cannon.barrelShoot();
+    }else{
+        if( sound_manager.getAudio("after_load").currentTime > 3.1) cannon.barrelUp();
+    }
 }
 
 

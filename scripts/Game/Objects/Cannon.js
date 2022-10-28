@@ -3,7 +3,7 @@ import { toRadians, toDegree } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
 
 export default class Cannon {
-    constructor(canvas2D_context, sprite_sheet) {
+    constructor(canvas2D_context, sprite_sheet,sound_manager) {
         this.__ctx = canvas2D_context;
         this.__sprite_sheet = sprite_sheet;
         this.__frames = {};
@@ -28,7 +28,7 @@ export default class Cannon {
         this.x = 0;
         this.y = 0;
         // this.virtualPosXMax = this.__ctx.canvas.width - 250;
-    
+
     }
 
     __addMeterAnimator() {
@@ -122,7 +122,7 @@ export default class Cannon {
 
     draw() {
         this.__ctx.save();
-        this.__ctx.translate(this.x,0);
+        this.__ctx.translate(this.x, 0);
         if (this.isShooting) {
             this.draw_barrelShootAnimation();
         } else {
@@ -165,7 +165,7 @@ export default class Cannon {
         this.__ctx.fillRect(x, y, w, h);
     }
     draw_barrelAngleText() {
-        this.__ctx.textBaseline="top";
+        this.__ctx.textBaseline = "top";
         this.__ctx.font = "15px Arial";
         this.__ctx.fillStyle = "#fdfd97";
         let x = 150;
@@ -225,6 +225,12 @@ export default class Cannon {
         this.isShooting = true;
     }
 
+    
+    resetBarrel() {
+        this.isShooting = false;
+        this.barrel_angle = this.barrel_angleMax;
+    }
+
     getBarrelDirectionVector() {
         return new Vector2D().fromAngle(this.barrel_angle);
 
@@ -245,8 +251,8 @@ export default class Cannon {
         this.__animations.barrel_meter.animator.proceed();
         if (this.isShooting) {
             this.__animations.barrel_shoot.animator.proceed();
-        }else{
-            
+        } else {
+
             this.update_powerPercentage();
         }
     }

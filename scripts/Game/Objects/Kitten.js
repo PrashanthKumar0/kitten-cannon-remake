@@ -2,7 +2,7 @@ import { Vector2D } from "../../Lib/Math/Vector2D.js";
 import bloodParticle from "./BloodParticle.js";
 
 export default class Kitten {
-    constructor(canvas2D_context, sprite_sheet) {
+    constructor(canvas2D_context, sprite_sheet,sound_manager) {
         this.__ctx = canvas2D_context;
         this.__sprite_sheet = sprite_sheet;
         this.__frames_hq = [];

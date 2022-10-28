@@ -47,9 +47,16 @@ export default class SoundManager {
         let sound_obj = this.__sound_map[sound_name];
         if (!sound_obj) return;
         if (sound_obj.audio == null) return;
-        if (!sound_obj.audio.paused) return;
+        if (!sound_obj.audio.paused) return sound_obj.audio;
         sound_obj.audio.play();
         sound_obj.audio.volume = sound_obj.vol;
         return sound_obj.audio;
+    }
+    getAudio(sound_name) {
+        let sound = this.__sound_map[sound_name];
+        if (!sound) throw Error(" no sound with name " + sound_name + " found");
+        let audio = sound.audio;
+        if (audio == null) throw Error(" sound  " + sound_name + " didnt load.");
+        return audio;
     }
 }
