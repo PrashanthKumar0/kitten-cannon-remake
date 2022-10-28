@@ -9,6 +9,7 @@ import Venus from "./Venus.js";
 
 export default class ObjectGenerator {
     constructor(canvas2D_context, sprite_sheet, kitty, gap_inbetween, sound_manager) {
+        this.__sound_manager = sound_manager;
         this.__ctx = canvas2D_context;
         this.__sprite_sheet = sprite_sheet;
         this.gap_inbetween = gap_inbetween;
@@ -47,20 +48,26 @@ export default class ObjectGenerator {
                     }
                 )
             ) {
-                this.kitty.visible = false;
-                this.kitty.isDead = true;
                 object.shouldAnimate = true;
-
-                if (object instanceof Spike) {
-                    this.kitty.visible = true;
-                    if (this.kitty.position.y < this.kitty.groundLevel) {
-                        this.kitty.position.y += 0.5;
-                    }
+                if (object instanceof Venus) {
+                    if (this.kitty.isDead) return;
+                    this.__sound_manager.play("swallow");
+                    this.kitty.visible = false;
+                    this.kitty.isDead = true;
                 }
 
-                if (object instanceof Trampoline) {
-                    this.kitty.isDead = false;
+                if (object instanceof Spike) {
+                    if (this.kitty.isDead) return;
+                    this.__sound_manager.play("spike");
                     this.kitty.visible = true;
+                    if (this.kitty.position.y < this.kitty.groundLevel) {
+                        this.kitty.position.y += 0.1;
+                    }
+                    this.kitty.isDead = true;
+                }
+                
+                if (object instanceof Trampoline) {
+                    this.__sound_manager.play("trampoline");
                     this.kitty.velocity.scale(1.4);
                     this.kitty.velocity.y *= -1;
                     // let box = object.getHitBox();
@@ -81,19 +88,18 @@ export default class ObjectGenerator {
                     }
                 }
                 if (object instanceof Bomb) {
-                    this.kitty.isDead = false;
-                    this.kitty.visible = true;
-                    this.kitty.velocity.add(new Vector2D(50, -100));
+                    this.__sound_manager.play("tnt_blast");
+
+                    this.kitty.velocity.add(new Vector2D(38, -76));
                     this.kitty.update();
                     this.objects.push(new Blast(this.__ctx, this.__sprite_sheet, new Vector2D(hitBox.x, hitBox.y)));
                 }
 
                 if ((object instanceof Balloon)) {
-                    this.kitty.isDead = false;
-                    this.kitty.visible = true;
+                    this.__sound_manager.play("baloon_blast");
                     if (!object.exploded) {
                         this.kitty.update();
-                        this.kitty.velocity.add(new Vector2D(35, -100));
+                        this.kitty.velocity.add(new Vector2D(20, -40));
                     }
                     this.objects.push(new Blast(this.__ctx, this.__sprite_sheet, new Vector2D(hitBox.x, hitBox.y)));
                 }
@@ -108,7 +114,7 @@ export default class ObjectGenerator {
     }
     generateNewObject() {
         let rand = randomInt(0, 4);
-        // let rand = 4;
+        // rand = 2;
         switch (rand) {
             case 0: // VENUS
                 {

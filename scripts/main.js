@@ -1,8 +1,6 @@
 import { Vector2D } from "./Lib/Math/Vector2D.js";
 import Sprite from "./Lib/Image/SpriteSheet.js";
 import { $ } from "./utils.js";
-// import SpriteAnimator from "./Lib/Image/SpriteAnimator.js";
-// import { toRadians } from "./Lib/Math/functions.js";
 import Grass from "./Game/Objects/Grass.js";
 import Cannon from "./Game/Objects/Cannon.js";
 import { KEYS, handleKeyboardCallbacks, registerKeyEventCallback } from "./Game/KeyboardController.js";
@@ -14,13 +12,13 @@ import RoundButton from "./Game/UI/RoundButton.js";
 import HeightDisplay from "./Game/Objects/HeightDisplay.js";
 import MenuScreen from "./Game/UI/Screens/MenuScreen.js";
 import HowToPlayScreen from "./Game/UI/Screens/HowToPlayScreen.js";
-import { linearMap } from "./Lib/Math/functions.js";
+import { linearMap, randomInt } from "./Lib/Math/functions.js";
 import Creditscreen from "./Game/UI/Screens/CreditsScreen.js";
 import Timer from "./Game/Timer.js";
 import SoundManager from "./Game/SoundManager.js";
 
-//  production 
-// console.log=()=>{};
+////  production 
+//// console.log=()=>{};
 
 
 
@@ -84,8 +82,8 @@ function reset_game() {
     should_reset = false;
     score_board.visible = false;
     grass = new Grass(ctx, sprite);
-    cannon = new Cannon(ctx, sprite , sound_manager);
-    kitty = new Kitten(ctx, sprite , sound_manager);
+    cannon = new Cannon(ctx, sprite, sound_manager);
+    kitty = new Kitten(ctx, sprite, sound_manager);
     objectGenerator = new ObjectGenerator(ctx, sprite, kitty, OBJECT_GAP, sound_manager);
     fire_button = new RoundButton(ctx, "🔥", new Vector2D(canvas.width - 200, canvas.height - 200), 34, "white", "black", "Test");
     up_button = new RoundButton(ctx, "👆", new Vector2D(canvas.width - 100, canvas.height - 250), 34, "white", "black", "Test");
@@ -183,7 +181,13 @@ function throw_kitty() {
         kitty.position = cannon.getBarrelEnd()
             .subtract(barrelDir.copy().scale(32))
             .subtract(new Vector2D(kitty.width / 2, kitty.height / 2));
-        kitty.throw(barrelDir.scale((cannon.powerPercent / 100) * 80));
+        kitty.throw(barrelDir.scale((cannon.powerPercent / 100) * 46));
+        // sound_manager.play("cat"+randomInt(1,6))
+        if(Math.random() < 0.4){
+            sound_manager.play("cat"+randomInt(1,6))
+        }
+        sound_manager.play("baloon_blast");
+        
     }
     hide_buttons();
 }
@@ -212,9 +216,12 @@ async function preload() {
     set_events();
 }
 
+let preload_message = "";
+let preload_percentage = 0;
+
 function add_sounds() {
     sound_manager
-        .addSound("woosh", "assets/audio_fx/1_whooshrev.m4a", 1.0)
+        // .addSound("woosh", "assets/audio_fx/1_whooshrev.m4a", 1.0)
         .addSound("after_load", "assets/audio_fx/2.m4a", 1.0)
 
         .addSound("hit1", "assets/audio_fx/5_hit1.m4a", 1.0)
@@ -223,26 +230,28 @@ function add_sounds() {
         .addSound("hit4", "assets/audio_fx/2_hit4.m4a", 1.0)
 
 
-        .addSound("cat1", "../assets/audio_fx/12_cat1.m4a", 1.0)
-        .addSound("cat2", "../assets/audio_fx/11_cat2.m4a", 1.0)
-        .addSound("cat3", "../assets/audio_fx/10_cat3.m4a", 1.0)
-        .addSound("cat4", "../assets/audio_fx/9_cat4.m4a", 1.0)
-        .addSound("cat5", "../assets/audio_fx/8_cat5.m4a", 1.0)
-        .addSound("cat6", "../assets/audio_fx/7_cat6.m4a", 1.0)
+        .addSound("cat1", "assets/audio_fx/12_cat1.m4a", 1.0)
+        .addSound("cat2", "assets/audio_fx/11_cat2.m4a", 1.0)
+        .addSound("cat3", "assets/audio_fx/10_cat3.m4a", 1.0)
+        .addSound("cat4", "assets/audio_fx/9_cat4.m4a", 1.0)
+        .addSound("cat5", "assets/audio_fx/8_cat5.m4a", 1.0)
+        .addSound("cat6", "assets/audio_fx/7_cat6.m4a", 1.0)
 
-        .addSound("tnt_blast", "../assets/audio_fx/191.m4a", 1.0)
-        .addSound("spike", "../assets/audio_fx/203.m4a", 1.0)
-        .addSound("swallow", "../assets/audio_fx/222.m4a", 1.0)
-        .addSound("trampoline", "../assets/audio_fx/245.m4a", 1.0)
-        .addSound("barrel", "../assets/audio_fx/375.m4a", 1.0)
-        .addSound("baloon_blast", "../assets/audio_fx/378.m4a", 1.0)
-        // .addSound("woosh", "../assets/audio_fx/311.m4a",1.0)
-        // .addSound("woosh", "../assets/audio_fx/6_failure.m4a",1.0)
+        .addSound("tnt_blast", "assets/audio_fx/191.m4a", 1.0)
+        .addSound("spike", "assets/audio_fx/203.m4a", 1.0)
+        .addSound("swallow", "assets/audio_fx/222.m4a", 1.0)
+        .addSound("trampoline", "assets/audio_fx/245.m4a", 1.0)
+        .addSound("barrel", "assets/audio_fx/375.m4a", 1.0)
+        .addSound("baloon_blast", "assets/audio_fx/378.m4a", 1.0)
+        // .addSound("woosh", "assets/audio_fx/311.m4a",1.0)
+        // .addSound("woosh", "assets/audio_fx/6_failure.m4a",1.0)
 
 
         .loadAll()
         .onLoad = function (sound_name, progress_percentage) {
-            console.log("loaded sound " + sound_name, progress_percentage + " %", progress_percentage == 100 ? "{done}" : "")
+            // console.log(, progress_percentage + " %", progress_percentage == 100 ? "{done}" : "")
+            preload_message = "loaded sound " + sound_name;
+            preload_percentage = progress_percentage;
         }
 }
 
@@ -348,7 +357,7 @@ function show_load_screen(progress, max_progress) {
     ctx.fillText(text, canvas.width / 2 - font_w_half, canvas.height / 2 + 100);
 }
 
-let targetFps = 60;
+let targetFps = 60; // TODO : get rid of this.
 
 function render_game_screen() {
     let dt = timer.getTickS();
@@ -464,14 +473,34 @@ function preload_screen() {
 
 
         if (TouchController.TOUCH_EVENT_TYPES.down == TouchController.TOUCH_INFORMATION.eventType) {
-            let touch_pos = TouchController.TOUCH_INFORMATION.position.copy();
-            if (touch_pos.subtract(arc_pos).magSq() <= arc_r * arc_r);
-            CURRENT_GAME_SCREEN = GAME_SCREENS_E.Splash;
-            sound_manager.play("after_load").onended = function () {
-                CURRENT_GAME_SCREEN = GAME_SCREENS_E.Menu;
-                cannon.resetBarrel();
+            let touch_pos = TouchController.map_coord_to_canvas(TouchController.TOUCH_INFORMATION.position.copy(), canvas);
+
+            if (touch_pos.subtract(arc_pos).magSq() <= arc_r * arc_r) {
+                setTimeout(() => {
+                    CURRENT_GAME_SCREEN = GAME_SCREENS_E.Splash;
+                    sound_manager.play("after_load").onended = function () {
+                        CURRENT_GAME_SCREEN = GAME_SCREENS_E.Menu;
+                        cannon.resetBarrel();
+                    }
+                }, 400);
             }
         }
+
+    } else {
+
+        ctx.fillStyle = "#000";
+        ctx.font = "30px Test";
+        let progress_width = 200;
+        let text_w = ctx.measureText(preload_message).width;
+        ctx.fillText(preload_message, arc_pos.x - text_w / 2, arc_pos.y);
+
+
+        ctx.fillStyle = "forestgreen";
+        ctx.fillRect(arc_pos.x - progress_width / 2 + 8, arc_pos.y + 50 + 8, progress_width * (preload_percentage / 100), 40);
+        ctx.fillStyle = "#c0c0c0";
+        ctx.fillRect(arc_pos.x - progress_width / 2, arc_pos.y + 50, progress_width, 40);
+        ctx.fillStyle = "lightgreen";
+        ctx.fillRect(arc_pos.x - progress_width / 2, arc_pos.y + 50, progress_width * (preload_percentage / 100), 40);
 
     }
 
@@ -481,10 +510,10 @@ function splash_screen() {
     grass.draw();
     cannon.draw();
     cannon.update();
-    if( sound_manager.getAudio("after_load").currentTime > 4.1){
+    if (sound_manager.getAudio("after_load").currentTime > 4.1) {
         cannon.barrelShoot();
-    }else{
-        if( sound_manager.getAudio("after_load").currentTime > 3.1) cannon.barrelUp();
+    } else {
+        if (sound_manager.getAudio("after_load").currentTime > 3.1) cannon.barrelUp();
     }
 }
 

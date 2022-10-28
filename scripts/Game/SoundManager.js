@@ -11,6 +11,7 @@ export default class SoundManager {
             url: sound_url,
             audio: null,
             vol: volume,
+            play_count: 0,
         };
         return this;
     }
@@ -45,11 +46,31 @@ export default class SoundManager {
 
     play(sound_name) {
         let sound_obj = this.__sound_map[sound_name];
-        if (!sound_obj) return;
-        if (sound_obj.audio == null) return;
+        if (!sound_obj) return this;
+        if (sound_obj.audio == null) return this;
         if (!sound_obj.audio.paused) return sound_obj.audio;
         sound_obj.audio.play();
         sound_obj.audio.volume = sound_obj.vol;
+        return sound_obj.audio;
+    }
+    pause(sound_name) {
+        let sound_obj = this.__sound_map[sound_name];
+        if (!sound_obj) return this;
+        if (sound_obj.audio == null) return this;
+        if (sound_obj.audio.paused) return sound_obj.audio;
+        sound_obj.audio.pause();
+        sound_obj.audio.volume = sound_obj.vol;
+        return sound_obj.audio;
+    }
+    playOnce(sound_name) {
+        let sound_obj = this.__sound_map[sound_name];
+        if (!sound_obj) return this;
+        if (sound_obj.audio == null) return this;
+        if (!sound_obj.audio.paused) return sound_obj.audio;
+        if (sound_obj.play_count > 0) return sound_obj.audio;
+        sound_obj.play_count++;
+
+        sound_obj.audio.play();
         return sound_obj.audio;
     }
     getAudio(sound_name) {

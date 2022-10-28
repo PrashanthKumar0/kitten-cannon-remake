@@ -1,8 +1,10 @@
+import { randomInt } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
 import bloodParticle from "./BloodParticle.js";
 
 export default class Kitten {
-    constructor(canvas2D_context, sprite_sheet,sound_manager) {
+    constructor(canvas2D_context, sprite_sheet, sound_manager) {
+        this.__sound_manager = sound_manager;
         this.__ctx = canvas2D_context;
         this.__sprite_sheet = sprite_sheet;
         this.__frames_hq = [];
@@ -37,7 +39,7 @@ export default class Kitten {
         this.omega = 0.05;
         this.virtualPosXMax = this.__ctx.canvas.width - 300;
         this.bloodParticles = [];
-        this.maxVelMagSq = 80*80;
+        this.maxVelMagSq = 80 * 80;
     }
 
     throw(velocity) {
@@ -52,7 +54,7 @@ export default class Kitten {
         this.in_jerk = false;
         if (this.isDead) {
             this.position.y = this.groundLevel - this.height;
-            this.velocity=new Vector2D(0,0);
+            this.velocity = new Vector2D(0, 0);
             console.log("dead");
             return;
         }
@@ -74,6 +76,7 @@ export default class Kitten {
             this.velocity.y *= -this.groundDampFactor;
             this.velocity.x *= this.groundDampFactor;
             if (velMagSq >= this.boneBreakingVelocityMagSq) {
+                this.__sound_manager.play("hit" + randomInt(1, 4));
                 this.spawnBlood();
                 this.spriteIndex = Math.floor(Math.random() * this.__frames_hq.length);
             }
@@ -83,10 +86,10 @@ export default class Kitten {
             this.omega = this.velocity.x / 120;
         }
         this.rotation += this.omega;
-    
+
     }
-    update_blood_particles(xVelocity){
-        
+    update_blood_particles(xVelocity) {
+
         this.bloodParticles.forEach((blood, idx) => {
             blood.position.x -= xVelocity;
             if (blood.position.x + blood.width <= 0) {

@@ -3,7 +3,8 @@ import { toRadians, toDegree } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
 
 export default class Cannon {
-    constructor(canvas2D_context, sprite_sheet,sound_manager) {
+    constructor(canvas2D_context, sprite_sheet, sound_manager) {
+        this.__sound_manager = sound_manager;
         this.__ctx = canvas2D_context;
         this.__sprite_sheet = sprite_sheet;
         this.__frames = {};
@@ -213,19 +214,25 @@ export default class Cannon {
         if (this.isShooting) return;
         this.barrel_angle -= this.barrel_angle_unit;
         if (this.barrel_angle <= this.barrel_angleMin) this.barrel_angle = this.barrel_angleMin;
+        else {
+            this.__sound_manager.play("barrel");
+        }
     }
 
     barrelDown() {
         if (this.isShooting) return;
         this.barrel_angle += this.barrel_angle_unit;
         if (this.barrel_angle >= this.barrel_angleMax) this.barrel_angle = this.barrel_angleMax;
+        else {
+            this.__sound_manager.play("barrel");
+        }
     }
 
     barrelShoot() {
         this.isShooting = true;
     }
 
-    
+
     resetBarrel() {
         this.isShooting = false;
         this.barrel_angle = this.barrel_angleMax;
