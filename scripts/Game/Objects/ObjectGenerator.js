@@ -22,15 +22,15 @@ export default class ObjectGenerator {
             object.draw();
         });
     }
-    update() {
+    update(dt) {
         if (this.objects.length < this.max_objects) {
             this.objects.push(this.generateNewObject());
         }
         this.objects.forEach((object, idx) => {
             if (!(this.kitty.isDead || !this.kitty.visible)) {
-                object.position.x -= this.kitty.velocity.x;
+                object.position.x -= this.kitty.velocity.x * dt;
             }
-            object.update();
+            object.update(dt);
             let hitBox;
             if (object.getHitBox) {
                 hitBox = object.getHitBox();
@@ -65,7 +65,7 @@ export default class ObjectGenerator {
                     }
                     this.kitty.isDead = true;
                 }
-                
+
                 if (object instanceof Trampoline) {
                     this.__sound_manager.play("trampoline");
                     this.kitty.velocity.scale(1.4);
@@ -84,21 +84,21 @@ export default class ObjectGenerator {
                     )) {
                         itr++;
                         if (itr > 30) break;
-                        this.kitty.update();
+                        this.kitty.update(dt);
                     }
                 }
                 if (object instanceof Bomb) {
                     this.__sound_manager.play("tnt_blast");
 
                     this.kitty.velocity.add(new Vector2D(38, -76));
-                    this.kitty.update();
+                    this.kitty.update(dt);
                     this.objects.push(new Blast(this.__ctx, this.__sprite_sheet, new Vector2D(hitBox.x, hitBox.y)));
                 }
 
                 if ((object instanceof Balloon)) {
                     this.__sound_manager.play("baloon_blast");
                     if (!object.exploded) {
-                        this.kitty.update();
+                        this.kitty.update(dt);
                         this.kitty.velocity.add(new Vector2D(20, -40));
                     }
                     this.objects.push(new Blast(this.__ctx, this.__sprite_sheet, new Vector2D(hitBox.x, hitBox.y)));

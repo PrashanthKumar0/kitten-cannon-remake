@@ -27,7 +27,7 @@ export default class Kitten {
         this.position = new Vector2D(0, 0);
         this.origin = this.position.copy();
         this.velocity = new Vector2D(5, -5);
-        this.gravity = new Vector2D(0, 1.0);
+        this.gravity = new Vector2D(0, 0.6);
         let ar = this.__frames_hq[0].getWidth() / this.__frames_hq[0].getHeight();
         this.height = 86;
         this.width = ar * this.height;
@@ -48,7 +48,7 @@ export default class Kitten {
         this.in_jerk = true;
         this.origin = this.position.copy();
     }
-    update() {
+    update(dt) {
 
         if (!this.visible) return;
         this.in_jerk = false;
@@ -58,13 +58,13 @@ export default class Kitten {
             console.log("dead");
             return;
         }
-        this.position.add(this.velocity);
+        this.position.add(this.velocity.copy().scale(dt));
         if (this.position.x >= this.virtualPosXMax) {
             this.position.x = this.virtualPosXMax;
         }
-        this.position.y = this.position.copy().add(this.velocity).y;
+        this.position.y = this.position.copy().add(this.velocity.copy().scale(dt)).y;
 
-        this.velocity.add(this.gravity);
+        this.velocity.add(this.gravity.copy().scale(dt));
         if (this.position.y + this.height > this.groundLevel) {
             this.position.y = this.groundLevel - this.height;
             let velMagSq = this.velocity.magSq();
@@ -85,13 +85,13 @@ export default class Kitten {
             }
             this.omega = this.velocity.x / 120;
         }
-        this.rotation += this.omega;
+        this.rotation += this.omega * dt;
 
     }
-    update_blood_particles(xVelocity) {
-
+    update_blood_particles(xVelocity, dt) {
+        let xVelocity_dt = xVelocity * dt;
         this.bloodParticles.forEach((blood, idx) => {
-            blood.position.x -= xVelocity;
+            blood.position.x -= xVelocity_dt;
             if (blood.position.x + blood.width <= 0) {
                 this.bloodParticles.splice(idx, 1);
             }

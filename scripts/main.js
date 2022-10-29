@@ -183,11 +183,11 @@ function throw_kitty() {
             .subtract(new Vector2D(kitty.width / 2, kitty.height / 2));
         kitty.throw(barrelDir.scale((cannon.powerPercent / 100) * 46));
         // sound_manager.play("cat"+randomInt(1,6))
-        if(Math.random() < 0.4){
-            sound_manager.play("cat"+randomInt(1,6))
+        if (Math.random() < 0.4) {
+            sound_manager.play("cat" + randomInt(1, 6))
         }
         sound_manager.play("baloon_blast");
-        
+
     }
     hide_buttons();
 }
@@ -364,18 +364,19 @@ function render_game_screen() {
     let fps = (1 / dt);
     ctx.font = "50px Test";
     ctx.fillStyle = "#000";
-    ctx.fillText("original FPS : " + fps.toFixed(0), 30, 30);
-    { // delay to match fps <= targetFps
-        let l_timer = new Timer();
-        let fps_l = fps;
-        let dt_accum = dt;
-        while (fps_l >= targetFps) {
-            dt_accum += l_timer.getTickS();
-            fps_l = (1 / dt_accum);
-        }
-        ctx.fillText("apparent FPS : " + fps_l.toFixed(0), 30, 90);
-    }
+    ctx.fillText("FPS : " + fps.toFixed(0), 30, 30);
+    // { // delay to match fps <= targetFps
+    //     let l_timer = new Timer();
+    //     let fps_l = fps;
+    //     let dt_accum = dt;
+    //     while (fps_l >= targetFps) {
+    //         dt_accum += l_timer.getTickS();
+    //         fps_l = (1 / dt_accum);
+    //     }
+    //     ctx.fillText("apparent FPS : " + fps_l.toFixed(0), 30, 90);
+    // }
     // this will be in kitty.getScore();
+    dt *= 100;
     let distance_travelled = (distance_travelled_px / pixel_per_feet).toFixed(0);
     let highest_distance_travelled = (highest_distance_travelled_px / pixel_per_feet).toFixed(0);
 
@@ -385,12 +386,12 @@ function render_game_screen() {
     grass.draw();
     cannon.draw();
     kitty.draw();
-    kitty.update();
+    kitty.update(dt);
     if (kitty.visible && !kitty.isDead) {
-        grass.x -= kitty.velocity.x;
-        cannon.x -= kitty.velocity.x;
-        kitty.update_blood_particles(kitty.velocity.x); // these interfaces are bad for now 
-        distance_travelled_px += kitty.velocity.x;
+        grass.x -= kitty.velocity.x * dt;
+        cannon.x -= kitty.velocity.x * dt;
+        kitty.update_blood_particles(kitty.velocity.x, dt); // these interfaces are bad for now 
+        distance_travelled_px += kitty.velocity.x * dt;
         // objectGenerator.update(kitty.velocity.x);
     }
 
@@ -398,7 +399,7 @@ function render_game_screen() {
         handle_highScore();
         score_board.visible = true;
     }
-    objectGenerator.update();
+    objectGenerator.update(dt);
     let correct_pos = TouchController.map_coord_to_canvas(TouchController.TOUCH_INFORMATION.position, canvas);
     ctx.beginPath();
     ctx.arc(correct_pos.x, correct_pos.y, 4, 0, Math.PI * 2);
@@ -411,7 +412,7 @@ function render_game_screen() {
         down_button.updateClickInput(correct_pos);
     }
     objectGenerator.drawAll();
-    cannon.update();
+    cannon.update(dt);
 
     fire_button.draw();
     up_button.draw();
