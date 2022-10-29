@@ -376,7 +376,7 @@ function render_game_screen() {
     //     ctx.fillText("apparent FPS : " + fps_l.toFixed(0), 30, 90);
     // }
     // this will be in kitty.getScore();
-    dt *= 100;
+    dt *= 80;
     let distance_travelled = (distance_travelled_px / pixel_per_feet).toFixed(0);
     let highest_distance_travelled = (highest_distance_travelled_px / pixel_per_feet).toFixed(0);
 
