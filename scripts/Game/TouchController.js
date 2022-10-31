@@ -4,6 +4,7 @@ import { Vector2D } from "../Lib/Math/Vector2D.js";
 export const TOUCH_EVENT_TYPES = {
     "undefined": 0b1,
     "up": 0b1 << 1,
+    "click": 0b1 << 1,
     "down": 0b1 << 2,
 }
 
@@ -26,10 +27,13 @@ addEventListener("touchstart", (event) => {
 //     // TOUCH_INFORMATION.position.y=event.touches[0].clientY;
 // });
 
-addEventListener("mousedown", (event) => {
+addEventListener("click", (event) => {
     TOUCH_INFORMATION.position.x = event.clientX - event.target.offsetLeft;
     TOUCH_INFORMATION.position.y = event.clientY - event.target.offsetTop;
-    TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.down;
+    TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.click;
+    setTimeout(() => {
+        TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.up;
+    }, 250);
 });
 
 addEventListener("mouseup", (event) => {

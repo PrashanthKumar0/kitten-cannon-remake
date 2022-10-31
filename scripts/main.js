@@ -55,7 +55,7 @@ let fire_button;
 let up_button;
 let down_button;
 let height_display;
-// 400 px = 1 meter
+//// 400 px = 1 meter
 const pixel_per_feet = 400;
 let skip_frames = 0;
 let max_skip_frames = 0;
@@ -205,7 +205,7 @@ async function preload() {
     menu_screen = new MenuScreen(ctx, screens_sprite, "Test");
     how_to_play_screen = new HowToPlayScreen(ctx, screens_sprite, "Test");
     credits_screen = new Creditscreen(ctx, screens_sprite, "Test");
-    // CURRENT_GAME_SCREEN = GAME_SCREENS_E.Play;
+    //// CURRENT_GAME_SCREEN = GAME_SCREENS_E.Play;
     highest_distance_travelled_px = 0; // todo : move this line in restart_game(); later
     sound_manager = new SoundManager();
     add_sounds();
@@ -285,6 +285,7 @@ function set_events() {
 let bg = new Image();
 bg.src = "ref_images/menu_screen.png";
 
+
 function gameLoop() {
     requestAnimationFrame(gameLoop);
 
@@ -357,7 +358,7 @@ function show_load_screen(progress, max_progress) {
     ctx.fillText(text, canvas.width / 2 - font_w_half, canvas.height / 2 + 100);
 }
 
-let targetFps = 60; // TODO : get rid of this.
+// //let targetFps = 60; // TODO : get rid of this.
 
 function render_game_screen() {
     let dt = timer.getTickS();
@@ -365,17 +366,17 @@ function render_game_screen() {
     ctx.font = "50px Test";
     ctx.fillStyle = "#000";
     ctx.fillText("FPS : " + fps.toFixed(0), 30, 30);
-    // { // delay to match fps <= targetFps
-    //     let l_timer = new Timer();
-    //     let fps_l = fps;
-    //     let dt_accum = dt;
-    //     while (fps_l >= targetFps) {
-    //         dt_accum += l_timer.getTickS();
-    //         fps_l = (1 / dt_accum);
-    //     }
-    //     ctx.fillText("apparent FPS : " + fps_l.toFixed(0), 30, 90);
-    // }
-    // this will be in kitty.getScore();
+    // // { // delay to match fps <= targetFps
+    // //     let l_timer = new Timer();
+    // //     let fps_l = fps;
+    // //     let dt_accum = dt;
+    // //     while (fps_l >= targetFps) {
+    // //         dt_accum += l_timer.getTickS();
+    // //         fps_l = (1 / dt_accum);
+    // //     }
+    // //     ctx.fillText("apparent FPS : " + fps_l.toFixed(0), 30, 90);
+    // // }
+    // // this will be in kitty.getScore();
     dt *= 80;
     let distance_travelled = (distance_travelled_px / pixel_per_feet).toFixed(0);
     let highest_distance_travelled = (highest_distance_travelled_px / pixel_per_feet).toFixed(0);
@@ -473,7 +474,7 @@ function preload_screen() {
         ctx.restore();
 
 
-        if (TouchController.TOUCH_EVENT_TYPES.down == TouchController.TOUCH_INFORMATION.eventType) {
+        if (TouchController.TOUCH_EVENT_TYPES.click == TouchController.TOUCH_INFORMATION.eventType) {
             let touch_pos = TouchController.map_coord_to_canvas(TouchController.TOUCH_INFORMATION.position.copy(), canvas);
 
             if (touch_pos.subtract(arc_pos).magSq() <= arc_r * arc_r) {
