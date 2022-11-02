@@ -1,4 +1,4 @@
-export default class SoundManager {
+export default class _SoundManager_Legacy {
     constructor() {
         this.__sound_map = {};
         this.onLoad = (song_name, progress_percentage) => { };

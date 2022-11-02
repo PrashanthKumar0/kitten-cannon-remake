@@ -35,6 +35,11 @@ addEventListener("click", (event) => {
         TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.up;
     }, 250);
 });
+addEventListener("mousedown", (event) => {
+    TOUCH_INFORMATION.position.x = event.clientX - event.target.offsetLeft;
+    TOUCH_INFORMATION.position.y = event.clientY - event.target.offsetTop;
+    TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.down;
+});
 
 addEventListener("mouseup", (event) => {
     TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.up;

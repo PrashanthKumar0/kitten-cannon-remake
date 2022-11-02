@@ -15,7 +15,7 @@ import HowToPlayScreen from "./Game/UI/Screens/HowToPlayScreen.js";
 import { linearMap, randomInt } from "./Lib/Math/functions.js";
 import Creditscreen from "./Game/UI/Screens/CreditsScreen.js";
 import Timer from "./Game/Timer.js";
-import SoundManager from "./Game/SoundManager.js";
+import SoundManager from "./Game/SoundManager/SoundManager.js";
 
 ////  production 
 //// console.log=()=>{};
