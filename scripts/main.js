@@ -15,7 +15,7 @@ import HowToPlayScreen from "./Game/UI/Screens/HowToPlayScreen.js";
 import { linearMap, randomInt } from "./Lib/Math/functions.js";
 import Creditscreen from "./Game/UI/Screens/CreditsScreen.js";
 import Timer from "./Game/Timer.js";
-import SoundManager from "./Game/SoundManager/SoundManager.js";
+import SoundManager from "./Game/SoundManager.js";
 
 ////  production 
 //// console.log=()=>{};
@@ -220,6 +220,12 @@ let preload_message = "";
 let preload_percentage = 0;
 
 function add_sounds() {
+    sound_manager.onLoad = function (sound_name, progress_percentage) {
+        // console.log(, progress_percentage + " %", progress_percentage == 100 ? "{done}" : "")
+        preload_message = "loaded sound " + sound_name;
+        preload_percentage = progress_percentage;
+    }
+
     sound_manager
         // .addSound("woosh", "assets/audio_fx/1_whooshrev.m4a", 1.0)
         .addSound("after_load", "assets/audio_fx/2.m4a", 1.0)
@@ -247,12 +253,7 @@ function add_sounds() {
         // .addSound("woosh", "assets/audio_fx/6_failure.m4a",1.0)
 
 
-        .loadAll()
-        .onLoad = function (sound_name, progress_percentage) {
-            // console.log(, progress_percentage + " %", progress_percentage == 100 ? "{done}" : "")
-            preload_message = "loaded sound " + sound_name;
-            preload_percentage = progress_percentage;
-        }
+        .loadAll();
 }
 
 function set_events() {
