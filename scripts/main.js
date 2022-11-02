@@ -182,7 +182,7 @@ function throw_kitty() {
             .subtract(barrelDir.copy().scale(32))
             .subtract(new Vector2D(kitty.width / 2, kitty.height / 2));
         kitty.throw(barrelDir.scale((cannon.powerPercent / 100) * 46));
-        // sound_manager.play("cat"+randomInt(1,6))
+
         if (Math.random() < 0.4) {
             sound_manager.play("cat" + randomInt(1, 6))
         }
@@ -378,7 +378,7 @@ function render_game_screen() {
     // //     ctx.fillText("apparent FPS : " + fps_l.toFixed(0), 30, 90);
     // // }
     // // this will be in kitty.getScore();
-    dt *= 80;
+    dt *= 72;
     let distance_travelled = (distance_travelled_px / pixel_per_feet).toFixed(0);
     let highest_distance_travelled = (highest_distance_travelled_px / pixel_per_feet).toFixed(0);
 
@@ -513,10 +513,10 @@ function splash_screen() {
     grass.draw();
     cannon.draw();
     cannon.update();
-    if (sound_manager.getAudio("after_load").currentTime > 4.1) {
+    if (sound_manager.getCurrentTime("after_load") > 4.1) {
         cannon.barrelShoot();
     } else {
-        if (sound_manager.getAudio("after_load").currentTime > 3.1) cannon.barrelUp();
+        if (sound_manager.getCurrentTime("after_load") > 3.1) cannon.barrelUp();
     }
 }
 

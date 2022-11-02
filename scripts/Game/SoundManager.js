@@ -38,7 +38,7 @@ export default class _SoundManager_WebAudio {
                         let percentage = (this.__progress / total_files) * 100;
                         this.onLoad(sound_map_key, percentage);
                         this.loaded = percentage >= 100;
-                        console.log("sound : ", sound_map_key, "progress : ", percentage)
+                        console.log("sound : ", sound_map_key, "progress : ", percentage);
                         resolve(sound_map_key);
                     })
                     .catch(err => { reject(err); });
@@ -48,8 +48,6 @@ export default class _SoundManager_WebAudio {
         });
 
         await Promise.all(proms);
-        console.log("MAP : ", this.__sound_map);
-        return this;
     }
 
     play(sound_name) {
@@ -70,13 +68,6 @@ export default class _SoundManager_WebAudio {
         this.__pause(sound_obj);
 
         return sound_obj.source;
-        // let sound_obj = this.__sound_map[sound_name];
-        // if (!sound_obj) return this;
-        // if (sound_obj.audio == null) return this;
-        // if (sound_obj.audio.paused) return sound_obj.audio;
-        // sound_obj.audio.pause();
-        // sound_obj.audio.volume = sound_obj.vol;
-        // return sound_obj.audio;
     }
     playOnce(sound_name) {
         let sound_obj = this.__sound_map[sound_name];
@@ -115,10 +106,10 @@ export default class _SoundManager_WebAudio {
         }
         sound_obj.playing = false;
     }
-    getAudio(sound_name) {
+    getCurrentTime(sound_name) {
         let sound_obj = this.__sound_map[sound_name];
-        if (!sound_obj) return this;
+        if (!sound_obj) return 0;
 
-        return sound_obj.source; // TODO : fix this as it will break stuff :|
+        return sound_obj.source.context.currentTime;
     }
 }
