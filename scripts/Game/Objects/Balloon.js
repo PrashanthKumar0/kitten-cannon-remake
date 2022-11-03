@@ -4,8 +4,8 @@ import { randomInt } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
 // TODO : as its exact copy of Venus class use inheritance
 export default class Balloon {
-    constructor(canvas2D_context, sprite_sheet, position) {
-        this.__ctx = canvas2D_context;
+    constructor(renderer, sprite_sheet, position) {
+        this.__renderer = renderer;
         this.__sprite_sheet = sprite_sheet;
         this.position = position;
         this.__animator = new SpriteAnimator("baloon_blast", this.__sprite_sheet);
@@ -45,7 +45,7 @@ export default class Balloon {
             let ar = frame.getWidth() / frame.getHeight();
             this.height = 100;
             this.width = this.height * ar;
-    
+
             this.position.y -= this.vely;
         }
     }
@@ -64,10 +64,10 @@ export default class Balloon {
 
         if (this.exploded) { //raise up
             let frame = this.__frame;
-            frame.draw(this.__ctx, this.position.x, this.position.y, this.width, this.height);
+            this.__renderer.drawFrame(frame, this.position.x, this.position.y, this.width, this.height);
         } else {
             let frame = this.__animator.getCurrentFrame();
-            frame.draw(this.__ctx, this.position.x, this.position.y, this.width, this.height);
+            this.__renderer.drawFrame(frame, this.position.x, this.position.y, this.width, this.height);
         }
     }
 

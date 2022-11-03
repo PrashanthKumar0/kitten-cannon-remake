@@ -2,8 +2,8 @@ import SpriteAnimator from "../../Lib/Image/SpriteAnimator.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
 // TODO : as its exact copy of Venus class use inheritance
 export default class Spike {
-    constructor(canvas2D_context, sprite_sheet, position) {
-        this.__ctx = canvas2D_context;
+    constructor(renderer, sprite_sheet, position) {
+        this.__renderer = renderer;
         this.__sprite_sheet = sprite_sheet;
         this.position = position;
         this.__animator = new SpriteAnimator("spikes", this.__sprite_sheet);
@@ -38,8 +38,7 @@ export default class Spike {
         // this.__ctx.fillRect(box.x, box.y, box.width, box.height);
         
         let frame = this.__animator.getCurrentFrame();
-        frame.draw(this.__ctx, this.position.x, this.position.y, this.width, this.height)
-        
+        this.__renderer.drawFrame(frame,this.position.x,this.position.y,this.width,this.height);
     }
 
 }

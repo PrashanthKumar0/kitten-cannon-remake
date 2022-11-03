@@ -2,8 +2,8 @@ import SpriteAnimator from "../../Lib/Image/SpriteAnimator.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
 // TODO : as its exact copy of Venus class use inheritance
 export default class Venus {
-    constructor(canvas2D_context, sprite_sheet, position) {
-        this.__ctx = canvas2D_context;
+    constructor(renderer, sprite_sheet, position) {
+        this.__renderer = renderer;
         this.__sprite_sheet = sprite_sheet;
         this.position = position;
         this.__animator = new SpriteAnimator("venus", this.__sprite_sheet);
@@ -13,7 +13,7 @@ export default class Venus {
         this.height = 200;
         this.width = this.height * ar;
         this.relativeHitBox = {
-            'position': new Vector2D(30,28),
+            'position': new Vector2D(30, 28),
             'width': 50,
             'height': 50,
         };
@@ -38,7 +38,7 @@ export default class Venus {
         // this.__ctx.fillRect(box.x, box.y, box.width, box.height);
 
         let frame = this.__animator.getCurrentFrame();
-        frame.draw(this.__ctx, this.position.x, this.position.y, this.width, this.height)
+        this.__renderer.drawFrame(frame, this.position.x, this.position.y, this.width, this.height);
     }
 
 }

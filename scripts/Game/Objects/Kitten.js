@@ -3,9 +3,9 @@ import { Vector2D } from "../../Lib/Math/Vector2D.js";
 import bloodParticle from "./BloodParticle.js";
 
 export default class Kitten {
-    constructor(canvas2D_context, sprite_sheet, sound_manager) {
+    constructor(renderer, sprite_sheet, sound_manager) {
+        this.__renderer = renderer;
         this.__sound_manager = sound_manager;
-        this.__ctx = canvas2D_context;
         this.__sprite_sheet = sprite_sheet;
         this.__frames_hq = [];
         let kitty_hq_anim_names = sprite_sheet.getAnimationFrames("kitty_hq");
@@ -21,7 +21,7 @@ export default class Kitten {
             this.__frames_lq.push(sprite_sheet.getFrame(animName));
         });
 
-        this.groundLevel = canvas2D_context.canvas.height - 24;
+        this.groundLevel = this.__renderer.canvas.height - 24;
         this.groundDampFactor = 0.7;
 
         this.position = new Vector2D(0, 0);
@@ -37,7 +37,7 @@ export default class Kitten {
         this.isDead = false;
         this.visible = false;
         this.omega = 0.05;
-        this.virtualPosXMax = this.__ctx.canvas.width - 300;
+        this.virtualPosXMax = this.__renderer.canvas.width - 300;
         this.bloodParticles = [];
         this.maxVelMagSq = 80 * 80;
     }
@@ -59,9 +59,9 @@ export default class Kitten {
             return;
         }
         this.position.add(this.velocity.copy().scale(dt));
-        if (this.position.x >= this.virtualPosXMax) {
-            this.position.x = this.virtualPosXMax;
-        }
+        // if (this.position.x >= this.virtualPosXMax) {
+        //     this.position.x = this.virtualPosXMax;
+        // }
         this.position.y = this.position.copy().add(this.velocity.copy().scale(dt)).y;
 
         this.velocity.add(this.gravity.copy().scale(dt));
@@ -89,6 +89,7 @@ export default class Kitten {
 
     }
     update_blood_particles(xVelocity, dt) {
+        return;
         let xVelocity_dt = xVelocity * dt;
         this.bloodParticles.forEach((blood, idx) => {
             blood.position.x -= xVelocity_dt;
@@ -102,7 +103,7 @@ export default class Kitten {
     }
 
     spawnBlood() {
-        this.bloodParticles.push(new bloodParticle(this.__ctx, this.__sprite_sheet, this.position.copy().add(new Vector2D(0, this.height / 2))));
+        this.bloodParticles.push(new bloodParticle(this.__renderer, this.__sprite_sheet, this.position.copy().add(new Vector2D(0, this.height / 2))));
     }
     draw() {
         this.__draw_blood();
@@ -110,10 +111,13 @@ export default class Kitten {
         this.__drawKitten();
     }
     __draw_blood() {
+        this.__renderer.imageSmoothingEnabled = false;
+        
         this.bloodParticles.forEach((blood) => {
             blood.draw();
         });
-        // this.__ctx.fillRect(this.position.x + this.width/2,this.position.y+ this.height/2,100,100);
+
+        this.__renderer.imageSmoothingEnabled = true;
     }
     __drawKitten() {
         let frame = this.__frames_hq[this.spriteIndex];
@@ -122,11 +126,7 @@ export default class Kitten {
         let y = this.position.y;
         let w = this.width;
         let h = this.height;
-        // this.__ctx.fillRect( x, y, w, h);
-        this.__ctx.save();
-        this.__ctx.translate(x + w / 2, y + h / 2);
-        this.__ctx.rotate(this.rotation);
-        frame.draw(this.__ctx, -w / 2, -h / 2, w, h);
-        this.__ctx.restore();
+        // this.__renderer.drawSolidRect(x, y, w, h, "#000");
+        this.__renderer.drawCenteredFrame(frame, x, y, w, h, this.rotation);
     }
 }

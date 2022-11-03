@@ -8,9 +8,9 @@ import Trampoline from "./Trampoline.js";
 import Venus from "./Venus.js";
 
 export default class ObjectGenerator {
-    constructor(canvas2D_context, sprite_sheet, kitty, gap_inbetween, sound_manager) {
+    constructor(renderer, sprite_sheet, kitty, gap_inbetween, sound_manager) {
         this.__sound_manager = sound_manager;
-        this.__ctx = canvas2D_context;
+        this.__renderer = renderer;
         this.__sprite_sheet = sprite_sheet;
         this.gap_inbetween = gap_inbetween;
         this.kitty = kitty;
@@ -27,10 +27,10 @@ export default class ObjectGenerator {
             this.objects.push(this.generateNewObject());
         }
         this.objects.forEach((object, idx) => {
-            if (!(this.kitty.isDead || !this.kitty.visible)) {
-                object.position.x -= this.kitty.velocity.x * dt;
-            }
-            object.update(dt);
+
+            // object.update(dt);
+            object.update();
+            
             let hitBox;
             if (object.getHitBox) {
                 hitBox = object.getHitBox();
@@ -92,7 +92,7 @@ export default class ObjectGenerator {
 
                     this.kitty.velocity.add(new Vector2D(38, -76));
                     this.kitty.update(dt);
-                    this.objects.push(new Blast(this.__ctx, this.__sprite_sheet, new Vector2D(hitBox.x, hitBox.y)));
+                    this.objects.push(new Blast(this.__renderer, this.__sprite_sheet, new Vector2D(hitBox.x, hitBox.y)));
                 }
 
                 if ((object instanceof Balloon)) {
@@ -101,7 +101,7 @@ export default class ObjectGenerator {
                         this.kitty.update(dt);
                         this.kitty.velocity.add(new Vector2D(20, -40));
                     }
-                    this.objects.push(new Blast(this.__ctx, this.__sprite_sheet, new Vector2D(hitBox.x, hitBox.y)));
+                    this.objects.push(new Blast(this.__renderer, this.__sprite_sheet, new Vector2D(hitBox.x, hitBox.y)));
                 }
             }
 
@@ -118,49 +118,49 @@ export default class ObjectGenerator {
         switch (rand) {
             case 0: // VENUS
                 {
-                    let pos = new Vector2D(this.__ctx.canvas.width + this.gap_inbetween, this.__ctx.canvas.height - 250)
+                    let pos = new Vector2D(this.__renderer.camera.getWidth() + this.gap_inbetween, this.__renderer.camera.getHeight() - 250)
                     if (this.objects.length == 0) {
-                        return new Venus(this.__ctx, this.__sprite_sheet, pos);
+                        return new Venus(this.__renderer, this.__sprite_sheet, pos);
                     }
                     pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
-                    return new Venus(this.__ctx, this.__sprite_sheet, pos);
+                    return new Venus(this.__renderer, this.__sprite_sheet, pos);
                 }
             case 1: // Spike
                 {
-                    let pos = new Vector2D(this.__ctx.canvas.width + this.gap_inbetween, this.__ctx.canvas.height - 170)
+                    let pos = new Vector2D(this.__renderer.camera.getWidth() + this.gap_inbetween, this.__renderer.camera.getHeight() - 170)
                     if (this.objects.length == 0) {
-                        return new Spike(this.__ctx, this.__sprite_sheet, pos);
+                        return new Spike(this.__renderer, this.__sprite_sheet, pos);
                     }
                     pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
-                    return new Spike(this.__ctx, this.__sprite_sheet, pos);
+                    return new Spike(this.__renderer, this.__sprite_sheet, pos);
                 }
             case 2: // Bomb
                 {
-                    let pos = new Vector2D(this.__ctx.canvas.width + this.gap_inbetween, this.__ctx.canvas.height - 200)
+                    let pos = new Vector2D(this.__renderer.camera.getWidth() + this.gap_inbetween, this.__renderer.camera.getHeight() - 200)
                     if (this.objects.length == 0) {
-                        return new Bomb(this.__ctx, this.__sprite_sheet, pos);
+                        return new Bomb(this.__renderer, this.__sprite_sheet, pos);
                     }
                     pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
-                    return new Bomb(this.__ctx, this.__sprite_sheet, pos);
+                    return new Bomb(this.__renderer, this.__sprite_sheet, pos);
                 }
             case 3: // Trampoline
                 {
-                    let pos = new Vector2D(this.__ctx.canvas.width + this.gap_inbetween, this.__ctx.canvas.height - 136)
+                    let pos = new Vector2D(this.__renderer.camera.getWidth() + this.gap_inbetween, this.__renderer.camera.getHeight() - 136)
                     if (this.objects.length == 0) {
-                        return new Trampoline(this.__ctx, this.__sprite_sheet, pos);
+                        return new Trampoline(this.__renderer, this.__sprite_sheet, pos);
                     }
                     pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
-                    return new Trampoline(this.__ctx, this.__sprite_sheet, pos);
+                    return new Trampoline(this.__renderer, this.__sprite_sheet, pos);
                 }
 
             case 4: // Baloon
                 {
-                    let pos = new Vector2D(this.__ctx.canvas.width + this.gap_inbetween, this.__ctx.canvas.height - 400)
+                    let pos = new Vector2D(this.__renderer.camera.getWidth() + this.gap_inbetween, this.__renderer.camera.getHeight() - 400)
                     if (this.objects.length == 0) {
-                        return new Balloon(this.__ctx, this.__sprite_sheet, pos);
+                        return new Balloon(this.__renderer, this.__sprite_sheet, pos);
                     }
                     pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
-                    return new Balloon(this.__ctx, this.__sprite_sheet, pos);
+                    return new Balloon(this.__renderer, this.__sprite_sheet, pos);
                 }
         }
     }

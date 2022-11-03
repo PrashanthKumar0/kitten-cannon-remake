@@ -1,8 +1,8 @@
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
 
 export default class HeightDisplay {
-    constructor(ctx, pixel_per_feet, font_family) {
-        this.__ctx = ctx;
+    constructor(renderer, pixel_per_feet, font_family) {
+        this.__renderer = renderer;
         this.__pixel_per_feet = pixel_per_feet;
         this.position = new Vector2D(100, 100);
         this.kittenPosition = new Vector2D(0, 0);
@@ -17,23 +17,26 @@ export default class HeightDisplay {
     }
     draw() {
         if (this.kittenPosition.y < 0) {
-            let text = ((Math.abs(this.kittenPosition.y) + this.__ctx.canvas.height) / this.__pixel_per_feet).toFixed(0);
-            this.__ctx.font = this.font_size + "px " + this.font_family;
-            this.__ctx.fillStyle = "#000";
-            this.__ctx.lineWidth=2;
-            this.__ctx.strokeStyle = "red";
-            this.__ctx.fillRect(this.kittenPosition.x, 20, this.height, this.width);
-            this.__ctx.strokeRect(this.kittenPosition.x, 20, this.height, this.width);
-            
-            this.__ctx.beginPath();
-            this.__ctx.arc(this.kittenPosition.x + this.width / 2, 22, 10, 0, Math.PI, true);
-            this.__ctx.fill();
-            this.__ctx.stroke();
-            this.__ctx.closePath();
+            let text = ((Math.abs(this.kittenPosition.y) + this.__renderer.camera.getHeight()) / this.__pixel_per_feet).toFixed(0);
+            this.__renderer.lineThickness = 2;
+            let pos = new Vector2D(this.kittenPosition.x + this.width / 2, 22);
+            let font_w = this.__renderer.getFontWidth(text, this.font_size, this.font_family);
 
-            this.__ctx.fillStyle = "red";
-            let font_w = this.__ctx.measureText(text).width;
-            this.__ctx.fillText(text, this.kittenPosition.x + this.width / 2 - font_w / 2, 20 + this.height / 2, 100, 100);
+
+            this.__renderer.drawSolidRect(this.kittenPosition.x, 20, this.height, this.width, "#000");
+            this.__renderer.drawOutlinedRect(this.kittenPosition.x, 20, this.height, this.width, "red");
+            this.__renderer.drawTopSemiCircle(pos.x, pos.y - 2, 10, "#000", "red");
+
+
+            this.__renderer.drawSolidText(
+                text,
+                this.kittenPosition.x + this.width / 2 - font_w / 2,
+                20 + this.height / 2,
+                "red",
+                this.font_size,
+                this.font_family,
+                "middle"
+            );
 
         }
     }

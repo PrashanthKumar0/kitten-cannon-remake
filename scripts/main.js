@@ -16,6 +16,8 @@ import { linearMap, randomInt } from "./Lib/Math/functions.js";
 import Creditscreen from "./Game/UI/Screens/CreditsScreen.js";
 import Timer from "./Game/Timer.js";
 import SoundManager from "./Game/SoundManager.js";
+import Renderer from "./Lib/Renderer/Renderer.js";
+import Camera2D from "./Lib/Camera2D/Camera2D.js";
 
 ////  production 
 //// console.log=()=>{};
@@ -76,20 +78,25 @@ const GAME_SCREENS_E = {
     "Credits": 0b1 << 5,
 };
 let CURRENT_GAME_SCREEN = GAME_SCREENS_E.Preload;
-
-
+let renderer;
+let camera;
 function reset_game() {
+    timer = new Timer();
+    camera = new Camera2D(canvas.width, canvas.height);
+    renderer = new Renderer(ctx, camera);
+
     should_reset = false;
     score_board.visible = false;
-    grass = new Grass(ctx, sprite);
-    cannon = new Cannon(ctx, sprite, sound_manager);
-    kitty = new Kitten(ctx, sprite, sound_manager);
-    objectGenerator = new ObjectGenerator(ctx, sprite, kitty, OBJECT_GAP, sound_manager);
+    grass = new Grass(renderer, sprite);
+    cannon = new Cannon(renderer, sprite, sound_manager);
+    kitty = new Kitten(renderer, sprite, sound_manager);
+    objectGenerator = new ObjectGenerator(renderer, sprite, kitty, OBJECT_GAP, sound_manager);
     fire_button = new RoundButton(ctx, "🔥", new Vector2D(canvas.width - 200, canvas.height - 200), 34, "white", "black", "Test");
     up_button = new RoundButton(ctx, "👆", new Vector2D(canvas.width - 100, canvas.height - 250), 34, "white", "black", "Test");
     down_button = new RoundButton(ctx, "👇", new Vector2D(canvas.width - 100, canvas.height - 150), 34, "white", "black", "Test");
-    height_display = new HeightDisplay(ctx, pixel_per_feet, "Test");
-    timer = new Timer();
+    height_display = new HeightDisplay(renderer, pixel_per_feet, "Test");
+
+    camera.follow(new Vector2D(canvas.width / 2, canvas.height / 2), 1);
 
     ground_ref = canvas.height - 60;
     // score reset
@@ -367,45 +374,25 @@ function render_game_screen() {
     ctx.font = "50px Test";
     ctx.fillStyle = "#000";
     ctx.fillText("FPS : " + fps.toFixed(0), 30, 30);
-    // // { // delay to match fps <= targetFps
-    // //     let l_timer = new Timer();
-    // //     let fps_l = fps;
-    // //     let dt_accum = dt;
-    // //     while (fps_l >= targetFps) {
-    // //         dt_accum += l_timer.getTickS();
-    // //         fps_l = (1 / dt_accum);
-    // //     }
-    // //     ctx.fillText("apparent FPS : " + fps_l.toFixed(0), 30, 90);
-    // // }
-    // // this will be in kitty.getScore();
+
+
+    //--------------------------------------------------
     dt *= 72;
-    let distance_travelled = (distance_travelled_px / pixel_per_feet).toFixed(0);
-    let highest_distance_travelled = (highest_distance_travelled_px / pixel_per_feet).toFixed(0);
+    renderer.clear();
+    handleKeyboardCallbacks();
 
-    score_board.score = distance_travelled;
-    score_board.highScore = highest_distance_travelled;
-    score_board.draw();
-    grass.draw();
-    cannon.draw();
-    kitty.draw();
+
+
+
+
+
     kitty.update(dt);
-    if (kitty.visible && !kitty.isDead) {
-        grass.x -= kitty.velocity.x * dt;
-        cannon.x -= kitty.velocity.x * dt;
-        kitty.update_blood_particles(kitty.velocity.x, dt); // these interfaces are bad for now 
-        distance_travelled_px += kitty.velocity.x * dt;
-        // objectGenerator.update(kitty.velocity.x);
-    }
+    height_display.updateWithKittenPosition(kitty.position);
 
-    if (kitty.isDead) {
-        handle_highScore();
-        score_board.visible = true;
-    }
-    objectGenerator.update(dt);
     let correct_pos = TouchController.map_coord_to_canvas(TouchController.TOUCH_INFORMATION.position, canvas);
-    ctx.beginPath();
-    ctx.arc(correct_pos.x, correct_pos.y, 4, 0, Math.PI * 2);
-    ctx.fill();
+    // ctx.beginPath();
+    // ctx.arc(correct_pos.x, correct_pos.y, 4, 0, Math.PI * 2);
+    // ctx.fill();
 
     if (TouchController.TOUCH_INFORMATION.eventType == TouchController.TOUCH_EVENT_TYPES.down) {
         score_board.updateClickInput(correct_pos);
@@ -413,21 +400,64 @@ function render_game_screen() {
         up_button.updateClickInput(correct_pos);
         down_button.updateClickInput(correct_pos);
     }
-    objectGenerator.drawAll();
+
+    objectGenerator.update(dt);
     cannon.update(dt);
+
+
+
+
+
+    if (kitty.position.x >= kitty.virtualPosXMax) {
+        camera.follow(kitty.position.copy().subtract(new Vector2D(0, 0)), 0.5);
+    } else {
+        camera.follow(new Vector2D(canvas.width / 2, canvas.height / 2));
+    }
+
+
+
+
+
+    if (kitty.isDead) {
+        handle_highScore();
+        score_board.visible = true;
+    }
+
+    { // SCORE BOARD
+        let distance_travelled = (distance_travelled_px / pixel_per_feet).toFixed(0);
+        let highest_distance_travelled = (highest_distance_travelled_px / pixel_per_feet).toFixed(0);
+        if (!(kitty.isDead) && kitty.visible) {
+            distance_travelled_px += kitty.velocity.x * dt;
+        }
+
+
+        score_board.score = distance_travelled;
+        score_board.highScore = highest_distance_travelled;
+        score_board.draw();
+
+    }
+
+    grass.draw();
+    cannon.draw();
+    kitty.draw();
+    height_display.draw();
+
+
+
 
     fire_button.draw();
     up_button.draw();
-    down_button.draw();
     height_display.draw();
-    height_display.updateWithKittenPosition(kitty.position);
+    down_button.draw();
 
-    handleKeyboardCallbacks();
+    objectGenerator.drawAll();
+
+
 
     if (should_reset) {
         reset_game();
+        return;
     }
-
 }
 
 function preload_screen() {

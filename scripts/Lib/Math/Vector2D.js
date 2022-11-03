@@ -14,23 +14,32 @@ export class Vector2D {
     getAngle() {
         return Math.atan2(this.y, this.x);
     }
-
-    add(vec2) {
+    __check_vec(vec2) {
         if (!(vec2 instanceof Vector2D)) {
             throw Error(" invalid object passed as vector2D");
         }
+    }
+    add(vec2) {
+        this.__check_vec(vec2);
+
         this.x += vec2.x;
         this.y += vec2.y;
         return this;
     }
 
     subtract(vec2) {
-        if (!(vec2 instanceof Vector2D)) {
-            throw Error(" invalid object passed as vector2D");
-        }
+        this.__check_vec(vec2);
+
         this.x -= vec2.x;
         this.y -= vec2.y;
         return this;
+    }
+
+    lerp(vec2, lerp_amount = 0.8) {
+        this.__check_vec(vec2);
+        this.x = this.x + (vec2.x - this.x) * (lerp_amount)
+        this.y = this.y + (vec2.y - this.y) * (lerp_amount)
+        return this.__check_vec;
     }
 
     scale(factor) {
