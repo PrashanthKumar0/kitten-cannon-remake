@@ -1,15 +1,11 @@
-import SpriteAnimator from "../../Lib/Image/SpriteAnimator.js";
-import SpriteSheet from "../../Lib/Image/SpriteSheet.js";
 import { randomInt } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
-// TODO : as its exact copy of Venus class use inheritance
-export default class Balloon {
+import GameObject from "./GameObject.js";
+
+export default class Balloon extends GameObject {
     constructor(renderer, sprite_sheet, position) {
-        this.__renderer = renderer;
-        this.__sprite_sheet = sprite_sheet;
-        this.position = position;
-        this.__animator = new SpriteAnimator("baloon_blast", this.__sprite_sheet);
-        this.shouldAnimate = false;
+        let height = 180;
+        super(renderer, sprite_sheet, position, height, "baloon_blast");
 
         let frame_names = sprite_sheet.getAnimationFrames("baloon");
         this.frameIndex = randomInt(0, frame_names.length - 1);
@@ -22,41 +18,22 @@ export default class Balloon {
             this.exploded = true;
         };
 
-
-        let frame = this.__animator.getCurrentFrame();
-        let ar = frame.getWidth() / frame.getHeight();
-        this.height = 190;
-        this.width = this.height * ar;
         this.relativeHitBox = {
             'position': new Vector2D(this.width / 4, this.height / 2),
             'width': this.width / 2,
             'height': this.height / 2,
         };
     }
-    startAnimation() {
-        this.shouldAnimate = true;
-    }
     update() {
-        if (this.shouldAnimate) {
-            this.__animator.proceed();
-        }
+        super.update();
         if (this.exploded) {
             let frame = this.__animator.getCurrentFrame();
             let ar = frame.getWidth() / frame.getHeight();
-            this.height = 100;
+            this.height = 92;
             this.width = this.height * ar;
 
             this.position.y -= this.vely;
         }
-    }
-    getHitBox() {
-        let pos = this.position.copy().add(this.relativeHitBox.position);
-        return {
-            'x': pos.x + 5,
-            'y': pos.y + 30,
-            'width': this.relativeHitBox.width - 10,
-            'height': this.relativeHitBox.height - 32,
-        };
     }
     draw() {
         // let box = this.getHitBox();
@@ -70,5 +47,4 @@ export default class Balloon {
             this.__renderer.drawFrame(frame, this.position.x, this.position.y, this.width, this.height);
         }
     }
-
 }

@@ -30,7 +30,7 @@ export default class ObjectGenerator {
 
             // object.update(dt);
             object.update();
-            
+
             let hitBox;
             if (object.getHitBox) {
                 hitBox = object.getHitBox();
@@ -107,14 +107,13 @@ export default class ObjectGenerator {
 
 
 
-            if (object.position.x + object.width < 0) {
+            if (object.position.x + object.width < this.__renderer.camera.position.x) {
                 this.objects.splice(idx, 1);
             }
         });
     }
     generateNewObject() {
         let rand = randomInt(0, 4);
-        // rand = 2;
         switch (rand) {
             case 0: // VENUS
                 {
@@ -152,7 +151,6 @@ export default class ObjectGenerator {
                     pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
                     return new Trampoline(this.__renderer, this.__sprite_sheet, pos);
                 }
-
             case 4: // Baloon
                 {
                     let pos = new Vector2D(this.__renderer.camera.getWidth() + this.gap_inbetween, this.__renderer.camera.getHeight() - 400)
@@ -162,6 +160,8 @@ export default class ObjectGenerator {
                     pos.x = this.objects[this.objects.length - 1].position.x + this.gap_inbetween;
                     return new Balloon(this.__renderer, this.__sprite_sheet, pos);
                 }
+            default:
+                throw Error(rand + " is not handled");
         }
     }
 }
