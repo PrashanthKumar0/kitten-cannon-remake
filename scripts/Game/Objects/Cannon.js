@@ -18,7 +18,7 @@ export default class Cannon {
         this.barrel_angle_unit = toRadians(0.5);
 
         this.minPowerPercent = 5;
-        this.powerVelocityScale = 5;
+        this.powerVelocityScale = 4;
         this.powerPercent = this.minPowerPercent;
         this.powerVelocity = this.powerVelocityScale;
 
