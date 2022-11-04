@@ -30,8 +30,6 @@ window.addEventListener("keydown",function(e){
     if(!key_pressed.includes(key)){
         key_pressed.push(key);
     }
-    
-    // console.log("down",key_pressed);
 });
 window.addEventListener("keyup",function(e){
     let key=e.key.toLocaleLowerCase();
@@ -39,7 +37,6 @@ window.addEventListener("keyup",function(e){
     if(idx!=-1){
         key_pressed.splice(idx,1);
     }
-    // console.log("up",key_pressed);
 });
 window.addEventListener("blur",function(){
     key_pressed.splice(0,key_pressed.length);

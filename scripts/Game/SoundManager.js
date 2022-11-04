@@ -38,7 +38,6 @@ export default class _SoundManager_WebAudio {
                         let percentage = (this.__progress / total_files) * 100;
                         this.onLoad(sound_map_key, percentage);
                         this.loaded = percentage >= 100;
-                        console.log("sound : ", sound_map_key, "progress : ", percentage);
                         resolve(sound_map_key);
                     })
                     .catch(err => { reject(err); });
@@ -92,7 +91,6 @@ export default class _SoundManager_WebAudio {
             sound_obj.source.buffer = sound_obj.audio_buffer;
             sound_obj.source.connect(this.__actx.destination);
             sound_obj.source.start();
-            console.log(sound_obj.url);
         }
         sound_obj.playing = true;
         sound_obj.source.addEventListener("ended", () => {
