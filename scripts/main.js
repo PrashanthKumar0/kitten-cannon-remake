@@ -415,12 +415,6 @@ function splash_screen() {
 }
 
 function render_screen(screen_class) {
-    //// ctx.drawImage(bg, canvas.width/2 - bg.width/2, 0);
-    //// ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
-    //// ctx.strokeRect(0, 0, canvas.width, canvas.height);
-    //// ctx.fillStyle="red";
-    //// ctx.font="50px Test1";
-    // // ctx.fillText("kitten  cannon  is  very  simple",100,400);    
     screen_class.draw();
     if (TouchController.TOUCH_INFORMATION.eventType == TouchController.TOUCH_EVENT_TYPES.down) {
         let correct_pos = TouchController.map_coord_to_canvas(TouchController.TOUCH_INFORMATION.position, canvas);
@@ -435,22 +429,19 @@ function render_game_screen() {
     ctx.fillStyle = "#000";
     ctx.fillText("FPS : " + fps.toFixed(0), 30, 30);
 
-
-    //--------------------------------------------------
-    dt = Math.min(dt, 1 / 20); // if user gets window.onblur then the dt may be really high. 
+    // if user gets window.onblur then the dt may be really high.
+    // so we use Math.min
+    dt = Math.min(dt, 1 / 20);
     dt *= 60;
     renderer.clear();
     handleKeyboardCallbacks();
-
-
-
-
 
 
     kitty.update(dt);
     height_display.updateWithKittenPosition(kitty.position);
 
     let correct_pos = TouchController.map_coord_to_canvas(TouchController.TOUCH_INFORMATION.position, canvas);
+    // debug cursor position
     // ctx.beginPath();
     // ctx.arc(correct_pos.x, correct_pos.y, 4, 0, Math.PI * 2);
     // ctx.fill();
@@ -466,17 +457,11 @@ function render_game_screen() {
     cannon.update(dt);
 
 
-
-
-
     if (kitty.position.x >= kitty.virtualPosXMax) {
         camera.follow(kitty.position.copy().subtract(new Vector2D(0, 0)), 0.5);
     } else {
         camera.follow(new Vector2D(canvas.width / 2, canvas.height / 2));
     }
-
-
-
 
 
     if (kitty.isDead) {
@@ -504,8 +489,6 @@ function render_game_screen() {
     height_display.draw();
 
 
-
-
     fire_button.draw();
     up_button.draw();
     height_display.draw();
@@ -514,11 +497,7 @@ function render_game_screen() {
     objectGenerator.drawAll();
 
 
-
-    if (should_reset) {
-        reset_game();
-        return;
-    }
+    if (should_reset) reset_game();
 }
 
 
