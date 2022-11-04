@@ -74,7 +74,7 @@ export default class _SoundManager_WebAudio {
         if (!sound_obj) return this;
         let buffer = sound_obj.audio_buffer;
         if (buffer == null) return this;
-        if (sound_obj.play_count > 0) return null; // ! WILL BREAK _SoundManager_Legacy CLASS
+        if (sound_obj.play_count > 0) return null;
         sound_obj.play_count++;
 
 

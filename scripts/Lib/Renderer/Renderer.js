@@ -1,5 +1,4 @@
 import Camera2D from "../Camera2D/Camera2D.js";
-import Frame from "../Image/Frame.js";
 import { Vector2D } from "../Math/Vector2D.js";
 // isnt affected by camera's y position
 export default class Renderer {
@@ -22,7 +21,6 @@ export default class Renderer {
 
         this.ctx.fillStyle = color;
         this.ctx.fillRect(local_pos.x, local_pos.y, w, h);
-
     }
     drawOutlinedRect(x, y, w, h, color = "cyan") {
         let local_pos = this.camera.getLocalPosition(new Vector2D(x, y));

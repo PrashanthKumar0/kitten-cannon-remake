@@ -22,9 +22,6 @@ export default class Button {
         this.__ctx.strokeStyle = this.text_color;
         this.__ctx.fillStyle = this.text_color;
         this.width = this.__ctx.measureText(this.text).width;
-        // this.__ctx.lineWidth = 1;
-        // this.__ctx.strokeRect(this.position.x, this.position.y, this.width + this.padding.x, this.height + this.padding.y);
-        // this.__ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
         this.__ctx.fillText(this.text, this.position.x + this.padding.x / 2, this.position.y + this.padding.y / 2);
     }
 

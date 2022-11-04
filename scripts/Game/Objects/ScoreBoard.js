@@ -84,12 +84,9 @@ export default class ScoreBoard {
         { // Score
             this.__ctx.font = "130px Test";
 
-            if (this.score >= 1000) {
+            if (this.score >= 1000) this.__ctx.fillStyle = "#600";
+            else this.__ctx.fillStyle = "#060";
 
-                this.__ctx.fillStyle = "#600";
-            } else {
-                this.__ctx.fillStyle = "#060";
-            }
 
             let txt = this.score + " ft";
             let font_width = this.__ctx.measureText(txt).width;

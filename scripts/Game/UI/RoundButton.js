@@ -21,17 +21,14 @@ export default class RoundButton {
         if (!this.visible) return;
         this.__ctx.textBaseline = "middle";
         this.__ctx.font = this.font_size + "px " + this.font_family;
-        // this.__ctx.strokeStyle = this.text_color;
+        
         this.width = this.__ctx.measureText(this.char).width;
-        // this.__ctx.lineWidth = 1;
-        // this.__ctx.strokeRect(this.position.x, this.position.y, this.width + this.padding.x, this.height + this.padding.y);
-        // this.__ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+        
         this.__ctx.fillStyle = this.bg_color;
         this.__ctx.beginPath();
         this.__ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
         this.__ctx.closePath();
         this.__ctx.fill();
-
 
         this.__ctx.fillStyle = this.text_color;
         this.__ctx.fillText(this.char, this.position.x - this.width / 2, this.position.y);

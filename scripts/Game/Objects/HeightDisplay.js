@@ -22,11 +22,9 @@ export default class HeightDisplay {
             let pos = new Vector2D(this.kittenPosition.x + this.width / 2, 22);
             let font_w = this.__renderer.getFontWidth(text, this.font_size, this.font_family);
 
-
             this.__renderer.drawSolidRect(this.kittenPosition.x, 20, this.height, this.width, "#000");
             this.__renderer.drawOutlinedRect(this.kittenPosition.x, 20, this.height, this.width, "red");
             this.__renderer.drawTopSemiCircle(pos.x, pos.y - 2, 10, "#000", "red");
-
 
             this.__renderer.drawSolidText(
                 text,
@@ -37,7 +35,6 @@ export default class HeightDisplay {
                 this.font_family,
                 "middle"
             );
-
         }
     }
 }

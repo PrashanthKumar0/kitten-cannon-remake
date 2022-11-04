@@ -15,17 +15,12 @@ export const TOUCH_INFORMATION = {
 addEventListener("touchend", (event) => {
     TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.up;
 });
-// addEventListener("touchcancel")
+
 addEventListener("touchstart", (event) => {
     TOUCH_INFORMATION.position.x = event.touches[0].clientX - event.target.offsetLeft;
     TOUCH_INFORMATION.position.y = event.touches[0].clientY - event.target.offsetTop;
     TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.down;
 });
-// addEventListener("touchmove",(event)=>{
-//     // // console.log(event.touches[0].clientX);
-//     // TOUCH_INFORMATION.position.x=event.touches[0].clientX;
-//     // TOUCH_INFORMATION.position.y=event.touches[0].clientY;
-// });
 
 addEventListener("click", (event) => {
     TOUCH_INFORMATION.position.x = event.clientX - event.target.offsetLeft;
