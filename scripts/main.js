@@ -19,10 +19,6 @@ import SoundManager from "./Game/SoundManager.js";
 import Renderer from "./Lib/Renderer/Renderer.js";
 import Camera2D from "./Lib/Camera2D/Camera2D.js";
 
-////  production 
-//// console.log=()=>{};
-
-
 
 let canvas, ctx;
 
@@ -115,15 +111,12 @@ function hide_buttons() {
 function add_button_events() {
 
     fire_button.onClick = (function () {
-        console.log("kitty throw");
         throw_kitty();
     });
     up_button.onClick = (function () {
-        console.log("barrel Up");
         cannon.barrelUp();
     });
     down_button.onClick = (function () {
-        console.log("barrel Down");
         cannon.barrelDown();
     });
 
@@ -131,42 +124,34 @@ function add_button_events() {
 
     // score board
     score_board.onContinue = (async function () {
-        // reset_game();
-        console.log("reset");
         should_reset = true;
     });
     score_board.onMenu = (async function () {
-        console.log("Menu");
         CURRENT_GAME_SCREEN = GAME_SCREENS_E.Menu;
         max_skip_frames = skip_frames = 60;
     });
 
 
     menu_screen.onStartClick = function () {
-        console.log("Start");
         CURRENT_GAME_SCREEN = GAME_SCREENS_E.Play;
         max_skip_frames = skip_frames = 60;
     }
     menu_screen.onHelpClick = function () {
-        console.log("How To Play");
         CURRENT_GAME_SCREEN = GAME_SCREENS_E.Help;
         max_skip_frames = skip_frames = 60;
     }
 
     menu_screen.onCreditsClick = function () {
-        console.log("How To Play");
         CURRENT_GAME_SCREEN = GAME_SCREENS_E.Credits;
         max_skip_frames = skip_frames = 60;
     }
 
     how_to_play_screen.onBackClick = function () {
-        console.log("Back");
         CURRENT_GAME_SCREEN = GAME_SCREENS_E.Menu;
         max_skip_frames = skip_frames = 60;
     }
 
     credits_screen.onBackClick = function () {
-        console.log("Back");
         CURRENT_GAME_SCREEN = GAME_SCREENS_E.Menu;
         max_skip_frames = skip_frames = 60;
     }
@@ -200,27 +185,34 @@ function throw_kitty() {
 }
 
 async function preload() {
-    console.log("start loading");
 
-    // TODO : use promises
-    sprite = await new Sprite("assets/sprite_sheet/kitty_cannon_dat").load();
-    console.log(sprite.name + " loaded...");
-    screens_sprite = await new Sprite("assets/sprite_sheet/game_screens_dat").load();
-    console.log(screens_sprite.name + " loaded...");
+    sound_manager = new SoundManager();
+    let proms = [];
+    proms.push(new Promise(async (resolve, reject) => {
+        sprite = await new Sprite("assets/sprite_sheet/kitty_cannon_dat").load();
+        resolve();
+    }));
+
+    proms.push(new Promise(async (resolve, reject) => {
+        screens_sprite = await new Sprite("assets/sprite_sheet/game_screens_dat").load();
+        resolve();
+    }));
+
+    await Promise.all(proms);
+
     score_board = new ScoreBoard(ctx);
 
     menu_screen = new MenuScreen(ctx, screens_sprite, "Test");
     how_to_play_screen = new HowToPlayScreen(ctx, screens_sprite, "Test");
     credits_screen = new Creditscreen(ctx, screens_sprite, "Test");
-    //// CURRENT_GAME_SCREEN = GAME_SCREENS_E.Play;
+
     highest_distance_travelled_px = 0; // todo : move this line in restart_game(); later
-    sound_manager = new SoundManager();
-    add_sounds();
 
     resize();
     reset_game();
 
     set_events();
+    add_sounds();
 }
 
 let preload_message = "";
@@ -228,7 +220,6 @@ let preload_percentage = 0;
 
 function add_sounds() {
     sound_manager.onLoad = function (sound_name, progress_percentage) {
-        // console.log(, progress_percentage + " %", progress_percentage == 100 ? "{done}" : "")
         preload_message = "loaded sound " + sound_name;
         preload_percentage = progress_percentage;
     }
@@ -269,23 +260,18 @@ function set_events() {
     // registerKeyEventCallback(KEYS.r, () => { cannon.resetCannon(); }); // temporarry
 
     registerKeyEventCallback(KEYS.w, () => {
-        console.log("BarrelUp");
         cannon.barrelUp();
     });
     registerKeyEventCallback(KEYS.arrowup, () => {
-        console.log("BarrelUp");
         cannon.barrelUp();
     });
     registerKeyEventCallback(KEYS.s, () => {
-        console.log("BarrelDown");
         cannon.barrelDown();
     });
     registerKeyEventCallback(KEYS.arrowdown, () => {
-        console.log("BarrelDown");
         cannon.barrelDown();
     });
     registerKeyEventCallback(KEYS.space, () => {
-        console.log("kitty throw");
         throw_kitty();
     });
 }

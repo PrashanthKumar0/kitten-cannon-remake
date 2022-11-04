@@ -28,8 +28,6 @@ export default class Cannon {
         this.isShooting = false;
         this.x = 0;
         this.y = 0;
-        // this.virtualPosXMax = this.__renderer.camera.getWidth() - 250;
-
     }
 
     __addMeterAnimator() {
@@ -76,8 +74,6 @@ export default class Cannon {
         let x = 109;
         let y = this.__renderer.camera.getHeight() - 188;
 
-
-
         this.__frames['cannon_base'] = {
             'frame': frame,
             'x': x,
@@ -110,7 +106,6 @@ export default class Cannon {
         let x = 176;
         let y = this.__renderer.camera.getHeight() - 194;
 
-
         this.__frames['cannon_barrel'] = {
             'frame': frame,
             'x': x,
@@ -120,10 +115,7 @@ export default class Cannon {
         };
     }
 
-
     draw() {
-        // this.__ctx.save();
-        // this.__ctx.translate(this.x, 0);
         if (this.isShooting) {
             this.draw_barrelShootAnimation();
         } else {
@@ -135,8 +127,6 @@ export default class Cannon {
         this.draw_cannonDial();
         this.draw_barrelAngleText();
         return;
-        // this.__ctx.restore();
-
     }
     draw_cannonBase() {
         let cannon_base = this.__frames.cannon_base;
@@ -170,14 +160,6 @@ export default class Cannon {
         let cannon_barrel = this.__frames.cannon_barrel;
         let pivot_pioint = new Vector2D(0, cannon_barrel.h / 2)
         this.__renderer.drawPivotedFrame(cannon_barrel.frame, cannon_barrel.x, cannon_barrel.y, cannon_barrel.w, cannon_barrel.h, pivot_pioint, this.barrel_angle);
-        // TODO: make this working
-        // this.__ctx.save();
-        // this.__ctx.translate(cannon_barrel.x, cannon_barrel.y + cannon_barrel.h / 2);
-        // this.__ctx.rotate(this.barrel_angle);
-        // this.__ctx.fillRect(0, 0, 10, 10);
-        // this.__ctx.strokeRect(0, -cannon_barrel.h / 2, cannon_barrel.w, cannon_barrel.h)
-        // // cannon_barrel.frame.draw(this.__ctx, 0, -cannon_barrel.h / 2, cannon_barrel.w, cannon_barrel.h)
-        // this.__ctx.restore();
     }
     draw_meter() {
         let meter_frame = this.__animations.barrel_meter.animator.getCurrentFrame();
@@ -198,8 +180,6 @@ export default class Cannon {
         let cannon_barrel = this.__frames.cannon_barrel;
         let pivot_pioint = new Vector2D(0, cannon_barrel.h / 2);
         this.__renderer.drawPivotedFrame(barrel_shoot_frame, cannon_barrel.x, cannon_barrel.y, cannon_barrel.w, cannon_barrel.h, pivot_pioint, this.barrel_angle)
-
-
     }
 
     barrelUp() {
@@ -224,10 +204,10 @@ export default class Cannon {
         this.isShooting = true;
     }
 
-
     resetBarrel() {
         this.isShooting = false;
         this.barrel_angle = this.barrel_angleMax;
+        this.__animations['barrel_shoot'].animator.reset();
     }
 
     getBarrelDirectionVector() {
@@ -255,10 +235,6 @@ export default class Cannon {
             this.update_powerPercentage();
         }
     }
-    // resetCannon() {
-    //     this.isShooting = false;
-    //     this.__animations.barrel_shoot.animator.reset();
-    // }
     update_powerPercentage() {
         this.powerPercent += this.powerVelocity;
         if (this.powerPercent >= 100) {

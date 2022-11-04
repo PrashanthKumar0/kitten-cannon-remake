@@ -7,6 +7,7 @@ i used to play a lot in my childhood.
 
 
 TODO : (Lots of things actually).
+- [ ] Fix Splash Screen cannon fire timing.
 - [ ] Refactor code. (follow any code style)
 - [ ] Proper type checking. (with instanceof ?
 - [ ] Doc comments
