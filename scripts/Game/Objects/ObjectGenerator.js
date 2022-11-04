@@ -1,5 +1,6 @@
 import { checkRectRectCollision, randomInt } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
+import Timer from "../Timer.js";
 import Balloon from "./Balloon.js";
 import Blast from "./Blast.js";
 import Bomb from "./Bomb.js";
@@ -21,6 +22,23 @@ export default class ObjectGenerator {
         this.objects.forEach((object) => {
             object.draw();
         });
+    }
+    resolve_collision_with(object) {
+        let itr = 0;
+        while (checkRectRectCollision(
+            object.getHitBox(),
+            {
+                'x': this.kitty.position.x,
+                'y': this.kitty.position.y,
+                'width': this.kitty.width,
+                'height': this.kitty.height,
+            }
+        )) {
+            console.log(" resolving ");
+            itr++;
+            if (itr >= 30) break;
+            this.kitty.update(0.1);
+        }
     }
     update(dt) {
         if (this.objects.length < this.max_objects) {
@@ -61,38 +79,39 @@ export default class ObjectGenerator {
                     this.__sound_manager.play("spike");
                     this.kitty.visible = true;
                     if (this.kitty.position.y < this.kitty.groundLevel) {
-                        this.kitty.position.y += 0.1;
+                        this.kitty.gravity = this.kitty.velocity = new Vector2D(0, 0);
+                        this.kitty.position.y += 5;
+                        this.kitty.omega = 0;
+                    } else {
+                        this.kitty.isDead = true;
                     }
-                    this.kitty.isDead = true;
                 }
 
                 if (object instanceof Trampoline) {
                     this.__sound_manager.play("trampoline");
-                    this.kitty.velocity.scale(1.4);
                     this.kitty.velocity.y *= -1;
-                    // let box = object.getHitBox();
-                    // this.kitty.position = new Vector2D(box.x + box.width + this.kitty.width + 3, box.y - this.kitty.height - 3);
-                    let itr = 0;
-                    while (checkRectRectCollision(
-                        object.getHitBox(),
-                        {
-                            'x': this.kitty.position.x,
-                            'y': this.kitty.position.y,
-                            'width': this.kitty.width,
-                            'height': this.kitty.height,
-                        }
-                    )) {
-                        itr++;
-                        if (itr > 30) break;
-                        this.kitty.update(dt);
-                    }
+                    let speed = this.kitty.velocity.mag();
+                    this.kitty.velocity.y *= 3;
+                    this.kitty.velocity.normalize().scale(speed);
+                    if (this.kitty.velocity.x < 2)
+                        this.kitty.velocity.x = 2; // prevent jumping on same trampoline
+
+                    object.onAnimationComplete = () => {
+                        object.reset();
+                    };
+
+                    this.resolve_collision_with(object);
                 }
                 if (object instanceof Bomb) {
                     this.__sound_manager.play("tnt_blast");
+                    this.kitty.velocity.y *= -2;
+                    this.kitty.velocity.x *= 1.8;
+                    this.kitty.velocity.x += 10;
+                    this.kitty.velocity.y -= 10;
 
-                    this.kitty.velocity.add(new Vector2D(38, -76));
                     this.kitty.update(dt);
                     this.objects.push(new Blast(this.__renderer, this.__sprite_sheet, new Vector2D(hitBox.x, hitBox.y)));
+                    this.resolve_collision_with(object);
                 }
 
                 if ((object instanceof Balloon)) {

@@ -54,7 +54,7 @@ let up_button;
 let down_button;
 let height_display;
 //// 400 px = 1 meter
-const pixel_per_feet = 400;
+const pixel_per_feet = 100;
 let skip_frames = 0;
 let max_skip_frames = 0;
 let menu_screen;
@@ -73,7 +73,7 @@ const GAME_SCREENS_E = {
     "Help": 0b1 << 4,
     "Credits": 0b1 << 5,
 };
-let CURRENT_GAME_SCREEN = GAME_SCREENS_E.Preload;
+let CURRENT_GAME_SCREEN = GAME_SCREENS_E.Play;
 let renderer;
 let camera;
 function reset_game() {
@@ -363,7 +363,8 @@ function render_game_screen() {
 
 
     //--------------------------------------------------
-    dt *= 72;
+    dt = Math.min(dt, 1 / 20); // if user gets window.onblur then the dt may be really high. 
+    dt *= 60;
     renderer.clear();
     handleKeyboardCallbacks();
 

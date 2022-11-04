@@ -17,6 +17,14 @@ export default class GameObject {
             'width': 0,
             'height': 0,
         };
+        this.onAnimationComplete = () => { };
+        this.__animator.onComplete = () => {
+            this.onAnimationComplete();
+        }
+    }
+    reset() {
+        this.shouldAnimate = false;
+        this.__animator.reset();
     }
     startAnimation() {
         this.shouldAnimate = true;
