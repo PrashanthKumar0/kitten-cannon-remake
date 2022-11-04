@@ -6,9 +6,7 @@ export default class Frame {
         if (!(image instanceof Image)) throw " given image isn't valid ";
         this.__data = data;
         this.__sprite_image = image;
-
-
-        
+    
         this.__aspect_ratio=this.getWidth()/this.getHeight();
         // todo : add piviot x,y and piviotCenter()
     }

@@ -1,5 +1,4 @@
-//-[Imports Variables]------------------------------------------
-
+//-[Imports]------------------------------------------
 import { Vector2D } from "./Lib/Math/Vector2D.js";
 import Sprite from "./Lib/Image/SpriteSheet.js";
 import { $ } from "./utils.js";
@@ -20,7 +19,7 @@ import Timer from "./Game/Timer.js";
 import SoundManager from "./Game/SoundManager.js";
 import Renderer from "./Lib/Renderer/Renderer.js";
 import Camera2D from "./Lib/Camera2D/Camera2D.js";
-//-[/Imports Variables]------------------------------------------
+//-[/Imports]------------------------------------------
 
 
 async function main() {

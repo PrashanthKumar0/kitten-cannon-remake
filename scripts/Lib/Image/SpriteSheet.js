@@ -1,16 +1,12 @@
-import "../Shapes/Rectangle.js";
 import  Frame  from "./Frame.js";
 
 export default class SpriteSheet {
     constructor(sprite_url, image_extension = '.png') {
-        // ! PUBLIC
-
         this.name = sprite_url;
         this.url = sprite_url;
         this.img_src = sprite_url + image_extension;
         this.json_src = sprite_url + '.json';
 
-        // ! Private
         this.__image = null;
         this.__json = null;
         this.__loaded = false;

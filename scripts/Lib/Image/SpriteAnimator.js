@@ -1,5 +1,4 @@
 import SpriteSheet from "./SpriteSheet.js";
-import Frame from "./Frame.js";
 
 export default class SpriteAnimator {
     constructor(animation_name, sprite_sheet) {
