@@ -537,7 +537,24 @@ function splash_screen() {
     }
 }
 
+addEventListener("click", goFullScreen);
 
+function goFullScreen() {
+    if (document.body.requestFullscreen) {
+        if (!document.body.fullScreen) {
+            document.body.requestFullscreen();
+        }
+    } else {
+        console.log("no full screen support");
+    }
+    if ('wakelock' in navigator) {
+        navigator.wakeLock.request('screen').then(() => {
+            console.log("wakelock aquired");
+        }).catch(err => {
+            console.log("failed aquiring wakelock");
+        });
+    }
+}
 // utils
 
 function resize() {
