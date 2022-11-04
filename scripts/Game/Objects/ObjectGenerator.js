@@ -1,6 +1,5 @@
 import { checkRectRectCollision, randomInt } from "../../Lib/Math/functions.js";
 import { Vector2D } from "../../Lib/Math/Vector2D.js";
-import Timer from "../Timer.js";
 import Balloon from "./Balloon.js";
 import Blast from "./Blast.js";
 import Bomb from "./Bomb.js";
@@ -89,12 +88,15 @@ export default class ObjectGenerator {
 
                 if (object instanceof Trampoline) {
                     this.__sound_manager.play("trampoline");
-                    this.kitty.velocity.y *= -1;
                     let speed = this.kitty.velocity.mag();
-                    this.kitty.velocity.y *= 3;
+                    if (this.kitty.velocity.y < 0) {
+                        this.kitty.velocity.y *= 2.5;
+                    } else {
+                        this.kitty.velocity.y *= -2.5;
+                    }
                     this.kitty.velocity.normalize().scale(speed);
-                    if (this.kitty.velocity.x < 2)
-                        this.kitty.velocity.x = 2; // prevent jumping on same trampoline
+                    if (this.kitty.velocity.x < 5)
+                        this.kitty.velocity.x = 5; // prevent jumping on same trampoline
 
                     object.onAnimationComplete = () => {
                         object.reset();
@@ -104,7 +106,11 @@ export default class ObjectGenerator {
                 }
                 if (object instanceof Bomb) {
                     this.__sound_manager.play("tnt_blast");
-                    this.kitty.velocity.y *= -2;
+                    if (this.kitty.velocity.y < 0) {
+                        this.kitty.velocity.y *= 2;
+                    } else {
+                        this.kitty.velocity.y *= -2;
+                    }
                     this.kitty.velocity.x *= 1.8;
                     this.kitty.velocity.x += 10;
                     this.kitty.velocity.y -= 10;

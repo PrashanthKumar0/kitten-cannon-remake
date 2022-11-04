@@ -73,7 +73,7 @@ const GAME_SCREENS_E = {
     "Help": 0b1 << 4,
     "Credits": 0b1 << 5,
 };
-let CURRENT_GAME_SCREEN = GAME_SCREENS_E.Play;
+let CURRENT_GAME_SCREEN = GAME_SCREENS_E.Preload;
 let renderer;
 let camera;
 function reset_game() {
