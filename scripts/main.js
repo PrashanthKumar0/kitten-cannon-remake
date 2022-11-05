@@ -25,10 +25,8 @@ import Camera2D from "./Lib/Camera2D/Camera2D.js";
 async function main() {
     setup();
     await preload();
-
     gameLoop();
 }
-
 window.onload = main;
 
 
@@ -59,8 +57,6 @@ let preload_percentage = 0;
 
 //// let bg = new Image();
 //// bg.src = "ref_images/menu_screen.png";
-
-
 
 
 // Constants
@@ -128,7 +124,7 @@ async function preload() {
     how_to_play_screen = new HowToPlayScreen(ctx, screens_sprite, "Test");
     credits_screen = new Creditscreen(ctx, screens_sprite, "Test");
 
-    highest_distance_travelled_px = 0; // todo : move this line in restart_game(); later
+    highest_distance_travelled_px = 0;
 
     reset_game();
 
@@ -238,7 +234,7 @@ function add_sounds() {
     }
 
     sound_manager
-        // .addSound("woosh", "assets/audio_fx/1_whooshrev.m4a", 1.0)
+        // .addSound("", "assets/audio_fx/1_whooshrev.m4a", 1.0)
         .addSound("after_load", "assets/audio_fx/2.m4a", 1.0)
 
         .addSound("hit1", "assets/audio_fx/5_hit1.m4a", 1.0)
@@ -259,8 +255,8 @@ function add_sounds() {
         .addSound("trampoline", "assets/audio_fx/245.m4a", 1.0)
         .addSound("barrel", "assets/audio_fx/375.m4a", 1.0)
         .addSound("baloon_blast", "assets/audio_fx/378.m4a", 1.0)
-        // .addSound("woosh", "assets/audio_fx/311.m4a",1.0)
-        // .addSound("woosh", "assets/audio_fx/6_failure.m4a",1.0)
+        // .addSound("", "assets/audio_fx/311.m4a",1.0)
+        // .addSound("", "assets/audio_fx/6_failure.m4a",1.0)
         .loadAll();
 }
 

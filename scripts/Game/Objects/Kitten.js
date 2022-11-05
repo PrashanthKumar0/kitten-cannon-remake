@@ -25,7 +25,6 @@ export default class Kitten {
         this.groundDampFactor = 0.7;
 
         this.position = new Vector2D(0, 0);
-        this.origin = this.position.copy();
         this.velocity = new Vector2D(5, -5);
         this.gravity = new Vector2D(0, 0.6);
         let ar = this.__frames_hq[0].getWidth() / this.__frames_hq[0].getHeight();
@@ -39,14 +38,12 @@ export default class Kitten {
         this.omega = 0.05;
         this.virtualPosXMax = this.__renderer.canvas.width - 300;
         this.bloodParticles = [];
-        this.maxVelMagSq = 80 * 80;
     }
 
     throw(velocity) {
         this.rotation = velocity.getAngle();
         this.velocity = velocity;
         this.in_jerk = true;
-        this.origin = this.position.copy();
     }
     update(dt) {
 
@@ -55,13 +52,9 @@ export default class Kitten {
         if (this.isDead) {
             this.position.y = this.groundLevel - this.height;
             this.velocity = new Vector2D(0, 0);
-            console.log("dead");
             return;
         }
         this.position.add(this.velocity.copy().scale(dt));
-        // if (this.position.x >= this.virtualPosXMax) {
-        //     this.position.x = this.virtualPosXMax;
-        // }
         this.position.y = this.position.copy().add(this.velocity.copy().scale(dt)).y;
 
         this.velocity.add(this.gravity.copy().scale(dt));
@@ -86,20 +79,6 @@ export default class Kitten {
             this.omega = this.velocity.x / 120;
         }
         this.rotation += this.omega * dt;
-
-    }
-    update_blood_particles(xVelocity, dt) {
-        return;
-        let xVelocity_dt = xVelocity * dt;
-        this.bloodParticles.forEach((blood, idx) => {
-            blood.position.x -= xVelocity_dt;
-            if (blood.position.x + blood.width <= 0) {
-                this.bloodParticles.splice(idx, 1);
-            }
-        });
-    }
-    getTranslationVec() {
-        return new Vector2D(this.position.x - this.origin.x, 0);
     }
 
     spawnBlood() {
@@ -126,7 +105,6 @@ export default class Kitten {
         let y = this.position.y;
         let w = this.width;
         let h = this.height;
-        // this.__renderer.drawSolidRect(x, y, w, h, "#000");
         this.__renderer.drawCenteredFrame(frame, x, y, w, h, this.rotation);
     }
 }
