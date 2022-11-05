@@ -80,7 +80,7 @@ let renderer;
 
 // in reset_game()
 // Objects
-let grass
+let grass;
 let cannon;
 let kitty;
 let objectGenerator;
@@ -228,7 +228,7 @@ function set_events() {
 
 
 function add_sounds() {
-    sound_manager.onLoad = function (sound_name, progress_percentage) {
+    sound_manager.onLoad = (sound_name, progress_percentage) => {
         preload_message = "loaded sound " + sound_name;
         preload_percentage = progress_percentage;
     }
@@ -264,7 +264,7 @@ function add_sounds() {
 function gameLoop() {
     requestAnimationFrame(gameLoop);
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    renderer.clear();
 
     if (skip_frames > 0) {
         skip_frames--;
@@ -294,6 +294,11 @@ function gameLoop() {
             render_game_screen();
             break;
     }
+
+    // debug cursor position
+    // ctx.beginPath();
+    // ctx.arc(correct_pos.x, correct_pos.y, 4, 0, Math.PI * 2);
+    // ctx.fill();
 }
 
 
@@ -370,7 +375,7 @@ function preload_screen() {
             if (touch_pos.subtract(arc_pos).magSq() <= arc_r * arc_r) {
                 setTimeout(() => {
                     CURRENT_GAME_SCREEN = GAME_SCREENS_E.Splash;
-                    sound_manager.play("after_load").onended = function () {
+                    sound_manager.play("after_load").onended = () => {
                         CURRENT_GAME_SCREEN = GAME_SCREENS_E.Menu;
                         cannon.resetBarrel();
                     }
@@ -436,10 +441,6 @@ function render_game_screen() {
     height_display.updateWithKittenPosition(kitty.position);
 
     let correct_pos = TouchController.map_coord_to_canvas(TouchController.TOUCH_INFORMATION.position, canvas);
-    // debug cursor position
-    // ctx.beginPath();
-    // ctx.arc(correct_pos.x, correct_pos.y, 4, 0, Math.PI * 2);
-    // ctx.fill();
 
     if (TouchController.TOUCH_INFORMATION.eventType == TouchController.TOUCH_EVENT_TYPES.down) {
         score_board.updateClickInput(correct_pos);

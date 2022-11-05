@@ -71,7 +71,6 @@ export default class ScoreBoard {
             this.__ctx.closePath();
             this.__ctx.fill();
 
-            // this.__ctx.fillStyle = "#555";
             this.__ctx.beginPath();
             this.__ctx.arc(canvas_w_half + boardW / 2 - 106 + 15 / 2, canvas_h_half + boardH / 2 - 70 + 15 / 2, 15 / 2 - 2, 0, Math.PI * 2);
             this.__ctx.closePath();
@@ -101,7 +100,6 @@ export default class ScoreBoard {
             } else {
                 this.__ctx.fillStyle = "#060";
             }
-            // this.__ctx.fillStyle = "#000";
             let font_width = this.__ctx.measureText(txt).width;
             this.__ctx.fillText(txt, canvas_w_half - font_width / 2 + 6, canvas_h_half - 68);
         }

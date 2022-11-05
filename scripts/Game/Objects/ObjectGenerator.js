@@ -33,7 +33,6 @@ export default class ObjectGenerator {
                 'height': this.kitty.height,
             }
         )) {
-            console.log(" resolving ");
             itr++;
             if (itr >= 30) break;
             this.kitty.update(0.1);
@@ -45,7 +44,6 @@ export default class ObjectGenerator {
         }
         this.objects.forEach((object, idx) => {
 
-            // object.update(dt);
             object.update();
 
             let hitBox;
@@ -129,7 +127,6 @@ export default class ObjectGenerator {
                     this.objects.push(new Blast(this.__renderer, this.__sprite_sheet, new Vector2D(hitBox.x, hitBox.y)));
                 }
             }
-
 
 
             if (object.position.x + object.width < this.__renderer.camera.position.x) {

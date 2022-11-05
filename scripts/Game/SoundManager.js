@@ -15,6 +15,7 @@ export default class _SoundManager_WebAudio {
             vol: volume,
             play_count: 0,
             playing: false,
+            start_time: 0,
         };
         return this;
     }
@@ -91,6 +92,7 @@ export default class _SoundManager_WebAudio {
             sound_obj.source.buffer = sound_obj.audio_buffer;
             sound_obj.source.connect(this.__actx.destination);
             sound_obj.source.start();
+            sound_obj.start_time = this.__actx.currentTime;
         }
         sound_obj.playing = true;
         sound_obj.source.addEventListener("ended", () => {
@@ -108,6 +110,6 @@ export default class _SoundManager_WebAudio {
         let sound_obj = this.__sound_map[sound_name];
         if (!sound_obj) return 0;
 
-        return sound_obj.source.context.currentTime;
+        return this.__actx.currentTime - sound_obj.start_time;
     }
 }
