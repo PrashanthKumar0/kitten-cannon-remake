@@ -70,7 +70,7 @@ const GAME_SCREENS_E = {
 };
 const pixel_per_feet = 100;
 const OBJECT_GAP = 800;
-
+const TIME_SCALE = 60;
 
 let CURRENT_GAME_SCREEN = GAME_SCREENS_E.Preload;
 
@@ -409,9 +409,10 @@ function preload_screen() {
 }
 
 function splash_screen() {
+    let dt = timer.getTickS() * TIME_SCALE;
     grass.draw();
     cannon.draw();
-    cannon.update();
+    cannon.update(dt);
     if (sound_manager.getCurrentTime("after_load") > 4.1) {
         cannon.barrelShoot();
     } else {
@@ -437,7 +438,7 @@ function render_game_screen() {
     // if user gets window.onblur then the dt may be really high.
     // so we use Math.min
     dt = Math.min(dt, 1 / 20);
-    dt *= 60;
+    dt *= TIME_SCALE;
     renderer.clear();
     handleKeyboardCallbacks();
 
@@ -545,9 +546,7 @@ addEventListener("click", goFullScreen);
 
 function goFullScreen() {
     if (document.body.requestFullscreen) {
-        if (!document.body.fullScreen) {
-            document.body.requestFullscreen();
-        }
+        document.body.requestFullscreen();
     } else {
         console.log("no full screen support");
     }
@@ -562,7 +561,7 @@ function goFullScreen() {
 function resize() {
     if (canvas) {
         TouchController.resetTouchInfo();
-        
+
         let canvas_ar = canvas.width / canvas.height;
         let portrait_width = canvas_ar * innerHeight;
         if (portrait_width < innerWidth) {

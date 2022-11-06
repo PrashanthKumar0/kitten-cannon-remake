@@ -226,17 +226,17 @@ export default class Cannon {
         return new Vector2D(barrel_frame.x, barrel_frame.y + barrel_frame.h / 2);
     }
 
-    update() {
+    update(dt) {
         this.__animations.barrel_meter.animator.proceed();
         if (this.isShooting) {
             this.__animations.barrel_shoot.animator.proceed();
         } else {
 
-            this.update_powerPercentage();
+            this.update_powerPercentage(dt);
         }
     }
-    update_powerPercentage() {
-        this.powerPercent += this.powerVelocity;
+    update_powerPercentage(dt) {
+        this.powerPercent += this.powerVelocity * dt;
         if (this.powerPercent >= 100) {
             this.powerPercent = 100;
             this.powerVelocity = -this.powerVelocityScale * 1.5;
