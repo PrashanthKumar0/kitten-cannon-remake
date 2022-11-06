@@ -296,9 +296,14 @@ function gameLoop() {
     }
 
     // debug cursor position
+    // let correct_pos = TouchController.map_coord_to_canvas(TouchController.TOUCH_INFORMATION.position, canvas);
+    // ctx.fillStyle = "white";
+    // ctx.strokeStyle = "black";
     // ctx.beginPath();
-    // ctx.arc(correct_pos.x, correct_pos.y, 4, 0, Math.PI * 2);
+    // ctx.arc(correct_pos.x, correct_pos.y, 15, 0, Math.PI * 2);
+    // ctx.closePath();
     // ctx.fill();
+    // ctx.stroke();
 }
 
 
@@ -556,14 +561,35 @@ function goFullScreen() {
 }
 function resize() {
     if (canvas) {
+        TouchController.resetTouchInfo();
+        
         let canvas_ar = canvas.width / canvas.height;
-
-        if (canvas_ar * innerHeight < innerWidth) {
+        let portrait_width = canvas_ar * innerHeight;
+        if (portrait_width < innerWidth) {
             canvas.style.width = 'auto';
             canvas.style.height = '100vh';
         } else {
             canvas.style.width = '100vw';
             canvas.style.height = 'auto';
+            portrait_width = innerWidth;
+        }
+        canvas.classList.remove('landscape');
+
+
+        let landscape_width = canvas_ar * innerWidth;
+        if (landscape_width < innerHeight) {
+            if (landscape_width > portrait_width) {
+                canvas.style.height = '100vw';
+                canvas.style.width = 'auto';
+                canvas.classList.add('landscape');
+            }
+        } else {
+            landscape_width = innerHeight;
+            if (landscape_width > portrait_width) {
+                canvas.style.height = 'auto';
+                canvas.style.width = '100vh';
+                canvas.classList.add('landscape');
+            }
         }
     }
 }

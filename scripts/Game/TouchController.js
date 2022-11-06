@@ -17,22 +17,22 @@ addEventListener("touchend", (event) => {
 });
 
 addEventListener("touchstart", (event) => {
-    TOUCH_INFORMATION.position.x = event.touches[0].clientX - event.target.offsetLeft;
-    TOUCH_INFORMATION.position.y = event.touches[0].clientY - event.target.offsetTop;
+    TOUCH_INFORMATION.position.x = event.touches[0].clientX;
+    TOUCH_INFORMATION.position.y = event.touches[0].clientY;
     TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.down;
 });
 
 addEventListener("click", (event) => {
-    TOUCH_INFORMATION.position.x = event.clientX - event.target.offsetLeft;
-    TOUCH_INFORMATION.position.y = event.clientY - event.target.offsetTop;
+    TOUCH_INFORMATION.position.x = event.clientX;
+    TOUCH_INFORMATION.position.y = event.clientY;
     TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.click;
     setTimeout(() => {
         TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.up;
     }, 250);
 });
 addEventListener("mousedown", (event) => {
-    TOUCH_INFORMATION.position.x = event.clientX - event.target.offsetLeft;
-    TOUCH_INFORMATION.position.y = event.clientY - event.target.offsetTop;
+    TOUCH_INFORMATION.position.x = event.clientX;
+    TOUCH_INFORMATION.position.y = event.clientY;
     TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.down;
 });
 
@@ -42,9 +42,19 @@ addEventListener("mouseup", (event) => {
 addEventListener("blur", (event) => {
     TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.up;
 });
-
+export function resetTouchInfo() {
+    TOUCH_INFORMATION.position = new Vector2D(0, 0);
+    TOUCH_INFORMATION.eventType = TOUCH_EVENT_TYPES.undefined;
+}
 export function map_coord_to_canvas(touch_position_vector, canvas_element) {
-    let x = linearMap(touch_position_vector.x, 0, canvas_element.clientWidth, 0, canvas_element.width);
-    let y = linearMap(touch_position_vector.y, 0, canvas_element.clientHeight, 0, canvas_element.height);
-    return new Vector2D(x, y);
+    let canvasBoundingClientRect = cnvs.getBoundingClientRect();
+    if (canvas_element.classList.contains("landscape")) {// landscape mode;
+        let can_x = linearMap(touch_position_vector.y, canvasBoundingClientRect.top, canvasBoundingClientRect.bottom, 0, canvas_element.width);
+        let can_y = linearMap(touch_position_vector.x, canvasBoundingClientRect.left, canvasBoundingClientRect.right, canvas_element.height, 0);
+        return new Vector2D(can_x, can_y);
+    } else {
+        let x = linearMap(touch_position_vector.x, canvasBoundingClientRect.left, canvasBoundingClientRect.right, 0, canvas_element.width);
+        let y = linearMap(touch_position_vector.y, canvasBoundingClientRect.top, canvasBoundingClientRect.bottom, 0, canvas_element.height);
+        return new Vector2D(x, y);
+    }
 }
