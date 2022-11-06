@@ -545,17 +545,23 @@ function throw_kitty() {
 addEventListener("click", goFullScreen);
 
 function goFullScreen() {
-    if (document.body.requestFullscreen) {
-        document.body.requestFullscreen();
-    } else {
-        console.log("no full screen support");
-    }
-    if ('wakelock' in navigator) {
-        navigator.wakeLock.request('screen').then(() => {
-            console.log("wakelock aquired");
-        }).catch(err => {
-            console.log("failed aquiring wakelock");
-        });
+    try {
+
+
+        if (document.body.requestFullscreen) {
+            document.body.requestFullscreen();
+        } else {
+            console.log("no full screen support");
+        }
+        if ('wakelock' in navigator) {
+            navigator.wakeLock.request('screen').then(() => {
+                console.log("wakelock aquired");
+            }).catch(err => {
+                console.log("failed aquiring wakelock");
+            });
+        }
+    } catch (err) {
+
     }
 }
 function resize() {
