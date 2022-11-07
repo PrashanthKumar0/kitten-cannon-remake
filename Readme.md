@@ -7,14 +7,14 @@ i used to play a lot in my childhood.
 
 
 TODO : (Lots of things actually).
-- [ ] Fix Splash Screen cannon fire timing.
-- [ ] Refactor code. (follow any code style)
+- [x] Fix Splash Screen cannon fire timing.
+- [x] Refactor code. (follow any code style)
 - [ ] Proper type checking. (with instanceof ?
 - [ ] Doc comments
 - [ ] Stagger frame in sprite Animator . (manage sprite fps dynamically)
 - [ ] Maybe add # for private fields in js
 - [ ] correct Bomb class sprite sheet 
 - [ ] make UI interactive (endgame) 
-- [ ] make game menu
-- [ ] better barrel up/down touch input.
+- [x] make game menu
+- [x] better barrel up/down touch input.
 - [ ] add screen.js to inherit from.
