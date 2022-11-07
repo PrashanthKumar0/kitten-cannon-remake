@@ -22,7 +22,7 @@ export default class ScoreBoard {
             let text = "Continue";
             let font_width = this.__ctx.measureText(text).width;
             let position = new Vector2D(canvas_w_half - font_width * 3 / 2, canvas_h_half - 10);
-            this.buttons["continue"] = new Button(this.__ctx, text, position, 44, "#ff680b", "Test");
+            this.buttons["continue"] = new Button(this.__ctx, text, position, 44, "#ff680b", "Nicotine");
             this.buttons["continue"].onClick = () => {
                 this.onContinue();
             }
@@ -32,7 +32,7 @@ export default class ScoreBoard {
             let text = "Exit to menu";
             let font_width = this.__ctx.measureText(text).width;
             let position = new Vector2D(canvas_w_half - font_width * 3 / 2, canvas_h_half + 38);
-            this.buttons["exit_to_continue"] = new Button(this.__ctx, text, position, 44, "#666", "Test");
+            this.buttons["exit_to_continue"] = new Button(this.__ctx, text, position, 44, "#666", "Nicotine");
             this.buttons["exit_to_continue"].onClick = () => {
                 this.onMenu();
             }
@@ -81,7 +81,7 @@ export default class ScoreBoard {
 
         this.__ctx.textBaseline = "top";
         { // Score
-            this.__ctx.font = "130px Test";
+            this.__ctx.font = "130px Nicotine";
 
             if (this.score >= 1000) this.__ctx.fillStyle = "#600";
             else this.__ctx.fillStyle = "#060";
@@ -93,7 +93,7 @@ export default class ScoreBoard {
         }
         { // High Score
             let txt = "Your High Score: " + this.highScore + " ft";
-            this.__ctx.font = "44px Test";
+            this.__ctx.font = "44px Nicotine";
             if (this.highScore >= 1000) {
 
                 this.__ctx.fillStyle = "#600";

@@ -1,17 +1,7 @@
 @font-face {
-    font-family: "Test";
+    font-family: "Nicotine";
     src: url("../assets/fonts/289_Nicotine\ Stains.woff2"), url("../assets/fonts/289_Nicotine\ Stains.woff");
 }
-
-@font-face {
-    font-family: "Test1";
-    /* src: url("../assets/fonts/292_Soopafresh.eot"), url("../assets/fonts/292_Soopafresh.woff"), url("../assets/fonts/292_Soopafresh.woff2"); */
-    src:
-        url("../assets/fonts/392_Tahoma.eot"),
-        url("../assets/fonts/392_Tahoma.woff"),
-        url("../assets/fonts/392_Tahoma.woff2");
-}
-
 body {
     margin: 0px;
     display: flex;
@@ -20,6 +10,7 @@ body {
     height: 100vh;
     width: 100vw;
     background-color: #000;
+    overflow: hidden;
 }
 
 * {
@@ -27,15 +18,25 @@ body {
 }
 
 canvas {
-    /* width:100%; */
-    /* border-radius: 8px; */
-    /* border: 4px solid #444; */
-    /* box-shadow: 0px 0px 30px #222; */
     width: 100vw;
     height: auto;
-    display: block;
+    display: none;
     background: white;
     background: linear-gradient(to bottom, skyblue, white);
+    z-index: 100;
+}
+
+body::before {
+    content: "Starting, please wait...";
+    color: #444;
+    font-family: "Nicotine";
+    text-align: center;
+    z-index: 0;
+    font-size: 65px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .landscape {

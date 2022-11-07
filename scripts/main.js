@@ -24,10 +24,16 @@ import Camera2D from "./Lib/Camera2D/Camera2D.js";
 
 async function main() {
     setup();
+    canvas.style.display = "none";
     await preload();
+    canvas.style.display = "block";
     gameLoop();
 }
 window.onload = main;
+
+
+// disables console.log
+console.log = () => { }
 
 
 //-[Global Variables]------------------------------------------
@@ -120,9 +126,9 @@ async function preload() {
 
     score_board = new ScoreBoard(ctx);
 
-    menu_screen = new MenuScreen(ctx, screens_sprite, "Test");
-    how_to_play_screen = new HowToPlayScreen(ctx, screens_sprite, "Test");
-    credits_screen = new Creditscreen(ctx, screens_sprite, "Test");
+    menu_screen = new MenuScreen(ctx, screens_sprite, "Nicotine");
+    how_to_play_screen = new HowToPlayScreen(ctx, screens_sprite, "Nicotine");
+    credits_screen = new Creditscreen(ctx, screens_sprite, "Nicotine");
 
     highest_distance_travelled_px = 0;
 
@@ -144,10 +150,10 @@ function reset_game() {
     cannon = new Cannon(renderer, game_sprite, sound_manager);
     kitty = new Kitten(renderer, game_sprite, sound_manager);
     objectGenerator = new ObjectGenerator(renderer, game_sprite, kitty, OBJECT_GAP, sound_manager);
-    fire_button = new RoundButton(ctx, "🔥", new Vector2D(canvas.width - 200, canvas.height - 200), 34, "white", "black", "Test");
-    up_button = new RoundButton(ctx, "👆", new Vector2D(canvas.width - 100, canvas.height - 250), 34, "white", "black", "Test");
-    down_button = new RoundButton(ctx, "👇", new Vector2D(canvas.width - 100, canvas.height - 150), 34, "white", "black", "Test");
-    height_display = new HeightDisplay(renderer, pixel_per_feet, "Test");
+    up_button = new RoundButton(ctx, "👆", new Vector2D(canvas.width - 110, canvas.height - 250), 50, "white", "black", "Nicotine");
+    fire_button = new RoundButton(ctx, "🔥", new Vector2D(canvas.width - 230, canvas.height - 180), 50, "white", "black", "Nicotine");
+    down_button = new RoundButton(ctx, "👇", new Vector2D(canvas.width - 110, canvas.height - 110), 50, "white", "black", "Nicotine");
+    height_display = new HeightDisplay(renderer, pixel_per_feet, "Nicotine");
 
     camera.follow(new Vector2D(canvas.width / 2, canvas.height / 2), 1);
 
@@ -323,7 +329,7 @@ function show_load_screen(progress, max_progress) {
     ctx.fillRect(canvas.width / 4, canvas.height / 2, w, 40);
     ctx.fillStyle = "forestgreen";
     ctx.strokeRect(canvas.width / 4, canvas.height / 2, w, 40);
-    ctx.font = "60px Test";
+    ctx.font = "60px Nicotine";
     let text = "Loading ...";
     let font_w_half = ctx.measureText(text).width / 2;
     ctx.fillText(text, canvas.width / 2 - font_w_half, canvas.height / 2 + 100);
@@ -391,7 +397,7 @@ function preload_screen() {
     } else {
 
         ctx.fillStyle = "#000";
-        ctx.font = "30px Test";
+        ctx.font = "30px Nicotine";
         let progress_width = 200;
         let text_w = ctx.measureText(preload_message).width;
         ctx.fillText(preload_message, arc_pos.x - text_w / 2, arc_pos.y);
@@ -431,7 +437,7 @@ function render_screen(screen_class) {
 function render_game_screen() {
     let dt = timer.getTickS();
     let fps = (1 / dt);
-    ctx.font = "50px Test";
+    ctx.font = "50px Nicotine";
     ctx.fillStyle = "#000";
     ctx.fillText("FPS : " + fps.toFixed(0), 30, 30);
 
@@ -545,23 +551,17 @@ function throw_kitty() {
 addEventListener("click", goFullScreen);
 
 function goFullScreen() {
-    try {
-
-
-        if (document.body.requestFullscreen) {
-            document.body.requestFullscreen();
-        } else {
+    if ("requestFullscreen" in document.body) {
+        document.body.requestFullscreen().catch(err => {
             console.log("no full screen support");
-        }
-        if ('wakelock' in navigator) {
-            navigator.wakeLock.request('screen').then(() => {
-                console.log("wakelock aquired");
-            }).catch(err => {
-                console.log("failed aquiring wakelock");
-            });
-        }
-    } catch (err) {
-
+        });
+    }
+    if ('wakelock' in navigator) {
+        navigator.wakeLock.request('screen').then(() => {
+            console.log("wakelock aquired");
+        }).catch(err => {
+            console.log("failed aquiring wakelock");
+        });
     }
 }
 function resize() {

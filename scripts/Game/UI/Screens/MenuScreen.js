@@ -55,7 +55,7 @@ export default class MenuScreen {
         //     let text = "Start";
         //     let font_width = this.__ctx.measureText(text).width;
         //     let position = new Vector2D(canvas_w_half - font_width * 3 / 2, canvas_h_half - 10);
-        //     this.buttons["start"] = new Button(this.__ctx, text, position, 44, "#ff680b", "Test");
+        //     this.buttons["start"] = new Button(this.__ctx, text, position, 44, "#ff680b", "Nicotine");
         //     this.buttons["start"].onClick = () => {
         //         this.onStartClick();
         //     }
